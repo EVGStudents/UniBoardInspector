@@ -1,0 +1,54 @@
+* {
+	font-family: arial, helvetica, sans-serif;
+	font-size: small;
+}
+body {
+	background-color: darkgray;
+}
+a {
+	color: blue;
+	text-decoration: none;
+}
+th {
+	text-align: left;
+	padding-right: 5pt;
+	color: #e20018;
+}
+td {
+	vertical-align: top;
+	padding-right: 5pt;
+}
+.layout{
+    background-color: lightsteelblue;
+}
+
+.title {
+	font-size: large;
+	font-weight: bold;
+	color: black;
+        text-decoration: underline;
+}
+.heading {
+	font-size: x-large;
+	font-weight: bold;
+	color: #e20018;
+        text-align: center;
+        padding-bottom: 1cm;
+       
+}
+.info {
+	color: black; 
+        font-weight: bold;
+}
+.error {
+	background-color: yellow;
+}
+.pf-layout-pane-north {
+    background-color: lightcyan;
+            border: 0;
+            padding: 0;
+        }
+        
+        .p_ispectButton{
+            background-color: lightseagreen;
+        }

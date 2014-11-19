@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2013 Berner Fachhochschule, Switzerland.
+Bern University of Applied Sciences, Engineering and Information Technology,
+Research Institute for Security in the Information Society, E-Voting Group,
+Biel, Switzerland.
+
+Project UniVote.
+
+Distributable under GPL license.
+See terms of license at gnu.org.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:p="http://primefaces.org/ui">  
+
+    <h:head>
+        <link rel="stylesheet" href="resources/style.css" type="text/css"/>
+  
+        <title>UniBoard Inspector</title>
+        <h:outputStylesheet name="style.css"/>
+    </h:head>       
+    <h:body>
+        <p:layout fullPage="true">
+            <p:layoutUnit style="background-color: darkgray; text-align: center" position="north" resizable="true" size="50" minSize="120" maxSize="200">
+                <p:panel style="background-color: lightcyan">
+                <br /> <br />
+                <h:outputText value="UniBoard Inspector" styleClass="heading"/> 
+                <br /> <br /> <br /> 
+                </p:panel>
+            </p:layoutUnit>
+
+            <p:layoutUnit id="side" position="west" resizable="true"  size="300" minSize="400" maxSize="500">
+                <p:panel style="background-color: lightcyan">
+                <p:outputLabel value="Basic Search" styleClass="title" /> <br /> <br />
+                <h:form id="main">
+                    <h:panelGrid columns="4">
+                        <h:outputText value="Section:" styleClass="info"/>
+                        <p:selectOneMenu value="#{basicSearchBean.section}">
+                            <f:selectItem itemLabel="Select Section" itemValue="" />
+                            <f:selectItems value="#{populateBean.sections}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        
+                        <h:outputText value="Group:" styleClass="info"/>
+                        <p:selectOneMenu value="#{basicSearchBean.group}">
+                            <f:selectItem itemLabel="Select Group" itemValue=""/>
+                            <f:selectItems value="#{populateBean.groups}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        <h:outputText value="From:" styleClass="info"/> 
+                        <p:calendar size="14" value="#{basicSearchBean.dateFrom}"/>
+                        <h:outputText value="Time:" styleClass="info"/>
+                        <h:inputText value=""/>
+                        <h:outputText value="To:" styleClass="info"/>           
+                        <p:calendar size="14" value="#{basicSearchBean.dateTo}"/>
+                        <h:outputText value="Time:" styleClass="info"/>
+                        <h:inputText value=""/>
+                        <h:outputText value="Limit:" styleClass="info"/>
+                        <p:spinner min="1" size="11" value="#{basicSearchBean.limit}"/>
+                    </h:panelGrid>
+                    <br/> <br /> <br />
+                    <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{basicSearchBean.inspect}"/>
+                    <br/><br/> <br />
+                    <p:commandLink value="Advanced Search" styleClass="title" onclick="PF('advancedSearch').show();"  />
+                </h:form>
+                <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
+                </p:panel>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <h:outputText value="50 Most Recent Posts" styleClass="info"/>
+                <h:form id="centerPane" >
+                    <p:dataTable var="data" value="#{basicSearchBean.postData}">
+                    <p:column id="viewPost" width="100">
+                        <p:commandButton value="View Post" styleClass="title" onclick="PF('viewPost').show();"/>
+                    </p:column>
+                        <p:column id="sectionHeader" filterBy="#{data.section}" sortBy="#{data.section}">
+                        <f:facet name="header">
+                            <h:outputText value="Section" />
+                        </f:facet>
+                        <h:outputText value="#{data.section}" />
+                    </p:column>
+                    <p:column id="groupHeader" filterBy="#{data.group}" sortBy="#{data.group}">
+                        <f:facet name="header">
+                            <h:outputText value="Group" />
+                        </f:facet>
+                        <h:outputText value="#{data.group}" />
+                    </p:column>
+
+                    <p:column id="dateHeader" filterBy="#{data.date}" sortBy="#{data.date}">
+                        <f:facet name="header">
+                            <h:outputText value="Date" />
+                        </f:facet>
+                        <h:outputText value="#{data.date}" />
+                    </p:column>
+
+                    <p:column id="messageHeader" filterBy="#{data.message}" sortBy="#{data.message}">
+                        <f:facet name="header">
+                            <h:outputText value="Message" />
+                        </f:facet>
+                        <h:outputText value="#{data.message}" />
+                    </p:column>
+                </p:dataTable>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" resizable="true" size="20">
+            </p:layoutUnit>
+        </p:layout>
+        
+<!--******************************************** Dialog for Advanced Search ********************************** -->
+        <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="500" width="600">
+            <h:form id="searchForm">
+                <h:panelGrid columns="3">
+                    <h:outputText value="Section:" styleClass="info"/>
+                    <p:selectOneMenu>
+                        <f:selectItem itemLabel="All" itemValue="All" />
+                        <f:selectItem itemLabel="In" itemValue="In" />
+                        <f:selectItem itemLabel="Equals" itemValue="Equals" />
+                    </p:selectOneMenu>
+                    <p:selectManyMenu scrollHeight="50">
+                        <f:selectItem itemLabel="Select Section" itemValue="" />
+                        <f:selectItems value="#{populateBean.sections}" />
+                    </p:selectManyMenu>
+                    <h:outputText value="Group:" styleClass="info"/>
+                    <p:selectOneMenu>
+                        <f:selectItem itemLabel="All" itemValue="ALL" />
+                        <f:selectItem itemLabel="In" itemValue="In" />
+                        <f:selectItem itemLabel="Equals" itemValue="Equals" />
+                    </p:selectOneMenu>
+                    <p:selectManyMenu scrollHeight="50">
+                        <f:selectItem itemLabel="Select Group" itemValue="" />
+                         <f:selectItems value="#{populateBean.groups}" />
+                    </p:selectManyMenu>
+                    <h:outputText value="Date:" styleClass="info"/> 
+                    <p:selectOneMenu>
+                        <f:selectItem itemLabel="From" itemValue="From" />
+                        <f:selectItem itemLabel="Between" itemValue="Between" />
+                        <f:selectItem itemLabel="Till" itemValue="Till" />
+                    </p:selectOneMenu>
+                    <p:calendar />
+                    <p:outputLabel />
+                    <p:outputLabel />
+                    <p:calendar />
+                    <h:outputText value="Rank:" styleClass="info"/>  
+                    <p:selectOneMenu>
+                        <f:selectItem itemLabel="Equal To" itemValue="Equal To" />
+                        <f:selectItem itemLabel="Less Than" itemValue="Less Than" />
+                        <f:selectItem itemLabel="More Than" itemValue="More Than" />
+                        <f:selectItem itemLabel="Less Than Or Equal To" itemValue="Less Than Or Equal To" />
+                        <f:selectItem itemLabel="More Than Or Equal To" itemValue="More Than Or Equal To" />
+                        <f:selectItem itemLabel="Between" itemValue="Between" />
+                    </p:selectOneMenu>
+                    <p:spinner min="1"/>
+                    <h:outputText value="Limit:" styleClass="info"/>
+                    <p:spinner min="1"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog> 
+<!-- *********************************** Dialog for Post View *********************************  -->
+
+<p:dialog header="Post Details" widgetVar="viewPost" height="600" width="700">
+    <h:form id="postForm">
+        <p:growl id="msgs" showDetail="true" />
+        <h:panelGrid columns="2">
+            <h:outputText value="Section:" styleClass="info"/> 
+            <h:outputText value="HESB" />
+            <h:outputText value="Group:" styleClass="info"/> 
+            <h:outputText value="Student"/>
+            <h:outputText value="Rank:" styleClass="info"/> 
+            <h:outputText value="5"/>
+            <h:outputText value="Timestamp:" styleClass="info"/> 
+            <h:outputText value="12-01-2014 15:23"/>
+            <h:outputText value="Message:" styleClass="info"/>  
+            <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
+                <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputText value="bianp2">                  
+                    </h:outputText>
+                </h:panelGrid>
+            </p:fieldset>
+            <h:outputText value="Signature:" styleClass="info"/>  
+            <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
+                <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputText value="-------BEGIN SIGNATURE------ 
+                                  IQB1AwUBMVSiA5QYCuMfgNYjAQFAKgL/ZkBfbeNEsbthba4BlrcnjaqbcKgNv 
+                                  a5kr4537y8RCd+RHm75yYh5xxA1ojELwNhhb7cltrp2V7LlOnAelws4S87UX80c
+                                  LBtBcN6AACf11qymC2h+Rb2j5SU+rmXWru+=QFMx 
+                                  ------END SIGNATURE------">                  
+                    </h:outputText>
+                </h:panelGrid>
+            </p:fieldset>
+            <h:outputText value="Public Key:" styleClass="info"/>  
+            <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
+                <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputText value="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU 
+                                  GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3 
+                                  Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA 
+                                  t3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En 
+                                  mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx 
+                                  NrRFi9wrf+M7Q== schacon@agadorlaptop.local">                  
+                    </h:outputText>
+                </h:panelGrid>
+            </p:fieldset>
+            <h:outputText value="Hash:" styleClass="info"/>  
+            <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
+                <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputText value="d41d8cd98f00b204e9800998ecf8427 
+                                  75cdbfeb70a06d42210938da88c42991
+                                  6e0b7a1676ec0279139b3f39bd65e41a  
+                                  c74c812e4d2839fa9acf0aa0c915e022">                  
+                    </h:outputText>
+                </h:panelGrid>
+            </p:fieldset>
+            <h:outputText value="Confirmation:" styleClass="info"/>  
+            <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
+                <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:outputText value="-------BEGIN SIGNATURE------ 
+                                  IQB1AwUBMVSiA5QYCuMfgNYjAQFAKgL/ZkBfbeNEsbthba4BlrcnjaqbcKgNv+ 
+                                  a5kr4537y8RCd+RHm75yYh5xxA1ojELwNhhb7cltrp2V7LlOnAelws4S87UX80c 
+                                  LBtBcN6AACf11qymC2h+Rb2j5SU+rmXWru+=QFMx 
+                                  ------END SIGNATURE------">                  
+                    </h:outputText>
+                </h:panelGrid>
+            </p:fieldset>
+            
+        </h:panelGrid>  
+    </h:form>
+</p:dialog>
+    </h:body>
+</html>
