@@ -31,7 +31,7 @@ public class PopulateBean {
     private List<String> sections = new ArrayList<String>();
 
     private List<String> groups = new ArrayList<String>();
-    
+
     @PostConstruct
     public void init() {
         sections = Sections.getAllSections();

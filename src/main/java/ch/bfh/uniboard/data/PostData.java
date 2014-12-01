@@ -11,10 +11,16 @@
  */
 package ch.bfh.uniboard.data;
 
+import ch.bfh.uniboard.client.MessageHandler;
 import ch.bfh.uniboard.data.AttributesDTO.AttributeDTO;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.datatype.XMLGregorianCalendar;
+import org.primefaces.json.JSONException;
 
 /**
  *
@@ -30,11 +36,15 @@ public class PostData {
     private String date;
     private int rank;
     private String boardSignature;
+    private Map<String,Object> messagePayload;
 
     public PostData(PostDTO post) {
         extractValues(post);
     }
 
+    public String getParameterValue(String parameterName){
+        return messagePayload.get(parameterName).toString();
+    }
     public String getSignature() {
         return signature;
     }
@@ -91,9 +101,33 @@ public class PostData {
         this.boardSignature = boardSignature;
     }
 
+    public Map<String, Object> getMessagePayload() {
+        return messagePayload;
+    }
+
+    public List<String> getMessageKeys() {
+        return new ArrayList<>(messagePayload.keySet());
+    }
+
+    public int getMessageSize() {
+        return messagePayload.keySet().size();
+    }
+
+    public void setMessagePayload(Map<String, Object> messagePayload) {
+        this.messagePayload = messagePayload;
+    }
+
     private void extractValues(PostDTO post) {
 
         this.message = post.getMessage().toString();
+
+        try {
+            this.messagePayload = MessageHandler.getParametersFromPayload(post.message);
+//            this.messageKeys = new ArrayList<>(messagePayload.keySet());
+//            this.messageSize = messageKeys.size();
+        } catch (JSONException ex) {
+            Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         AttributesDTO alphaAttributes = post.getAlpha();
         List<AttributeDTO> attributeList = alphaAttributes.getAttribute();
@@ -118,8 +152,7 @@ public class PostData {
             ValueDTO value = betaAttributeList.get(i).getValue();
             if (key.equals(Keys.TIMESTAMP)) {
                 XMLGregorianCalendar timestamp = ((DateValueDTO) value).getValue();
-                this.date = timestamp.getYear()+"/"+timestamp.getMonth()+"/"+timestamp.getDay()+" "+
-                        timestamp.getHour()+":"+timestamp.getMinute();
+                this.date = formatDate(timestamp);
             }
             if (key.equals(Keys.RANK)) {
                 this.rank = ((IntegerValueDTO) value).getValue();
@@ -128,5 +161,33 @@ public class PostData {
                 this.boardSignature = ((StringValueDTO) value).getValue();
             }
         }
+    }
+    private String formatDate(XMLGregorianCalendar timestamp){
+
+        int day = timestamp.getDay();
+        String d= ""+day;
+        if(day<10){
+            d = "0"+day;
+        }
+        int month = timestamp.getMonth();
+        String m =""+month;
+        if(month<10){
+            m = "0"+ month;
+        }
+        int hour= timestamp.getHour();
+        String h =""+hour;
+        if(hour<10){
+            m = "0"+ hour;
+        }
+        int minute= timestamp.getMinute();
+        String min = ""+minute;
+        if(minute<10){
+            min = "0"+ minute;
+        }
+
+        String date = d+"/"+ m +"/"+timestamp.getYear()+" "+
+                        h+":"+m;
+        return date;
+
     }
 }

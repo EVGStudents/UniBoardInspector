@@ -17,12 +17,11 @@ import ch.bfh.uniboard.data.PostDTO;
 import ch.bfh.uniboard.data.PostData;
 import ch.bfh.uniboard.data.QueryDTO;
 import ch.bfh.uniboard.data.ResultContainerDTO;
-import ch.bfh.uniboard.exception.MissingQueryParametersException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceRef;
 
 /**
  *
@@ -30,31 +29,24 @@ import javax.xml.ws.WebServiceRef;
  */
 public class UniBoardClient {
 
-    @WebServiceRef(wsdlLocation
-            = "http://urd:5080/UniBoardService/UniBoardServiceImpl?wsdl")
     private static UniBoardService uniBoardService;
 
-//    public static void main(String args[]) {
-//
-//        getTop50MostRecentPosts();
-//
-//    }
+    public static void main(String args[]) {
+
+        getTop50MostRecentPosts();
+
+    }
 
     public static List<PostData> getTop50MostRecentPosts() {
 
         QueryBuilder builder = new QueryBuilder();
-
-        try {
-            QueryDTO query = builder.buildQuery("HESB", "student", null, null, 10);
-
+            QueryDTO query = builder.buildQuery();
             List<PostDTO> posts = sendQuery(query);
 
+            List<PostData> postData = convertToPostData(posts);
+
             printMessages(posts);
-        } catch (MissingQueryParametersException exp) {
-
-        }
-        return null;
-
+            return postData;
     }
 
     public static List<PostDTO> sendQuery(QueryDTO query) {
@@ -78,12 +70,13 @@ public class UniBoardClient {
     public static void printMessages(List<PostDTO> posts) {
 
         int nbMessages = posts.size();
-
+        List<Character> messageChar = new ArrayList<Character>();
         for (int i = 0; i < nbMessages; i++) {
             byte[] message = posts.get(i).getMessage();
             System.out.println("Message" + (i + 1));
             for (int j = 0; j < message.length; j++) {
                 System.out.print((char) message[j]);
+                messageChar.add((char) message[j]);
             }
             PostData data = new PostData(posts.get(i));
             System.out.println();
@@ -93,13 +86,15 @@ public class UniBoardClient {
             System.out.println("Group: " + data.getGroup());
             System.out.println();
         }
+    }
 
-//        for(int i=0;i<posts.size();i++){
-//            PostData data= posts.get(i);
-//            System.out.println("Post"+(i+1)+data.getDate());
-//             System.out.println("Post"+(i+1)+data.getMessage());
-//
-//        }
+    private static List<PostData> convertToPostData(List<PostDTO> posts) {
+        List<PostData> postData = new ArrayList<>();
+        for (int i = 0; i < posts.size(); i++) {
+            PostData post = new PostData(posts.get(i));
+            postData.add(post);
+        }
+        return postData;
     }
 }
 

@@ -84,7 +84,7 @@ public class QueryBuilder implements IQueryBuilder {
         if(limit<=0){
             limit=DefaultValues.LIMIT;
         }
-
+        
         QueryDTO query = new QueryDTO(constraintList, orderList, limit);
 
         return query;
@@ -97,7 +97,7 @@ public class QueryBuilder implements IQueryBuilder {
         OrderDTO order = new OrderDTO(timestamp, ascDesc);
 
         List<OrderDTO> orderList = new ArrayList<>();
-        
+
         orderList.add(order);
 
         return orderList;

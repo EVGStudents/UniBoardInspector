@@ -17,25 +17,24 @@ import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostDTO;
 import ch.bfh.uniboard.data.PostData;
 import ch.bfh.uniboard.data.QueryDTO;
-import ch.bfh.uniboard.exception.MissingQueryParametersException;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class BasicSearchBean {
 
-    //StudentBean studentBean;
     private String section = "";
 
     private String group = "";
@@ -44,11 +43,22 @@ public class BasicSearchBean {
 
     private Date dateTo;
 
+    private String timeFrom = DefaultValues.TIME_FROM;
+
+    private String timeTo = DefaultValues.TIME_TO;
+
     private int limit = DefaultValues.LIMIT;
 
     private List<PostData> postData = new ArrayList<>();
 
-    private PostData selectedPost;
+    private List<PostData> searchResults = new ArrayList<>();
+
+    private List<String> messageKeys = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        postData = UniBoardClient.getTop50MostRecentPosts();
+    }
 
     public String getSection() {
         return section;
@@ -90,62 +100,74 @@ public class BasicSearchBean {
         this.dateTo = dateTo;
     }
 
+    public String getTimeFrom() {
+        return timeFrom;
+    }
+
+    public void setTimeFrom(String timeFrom) {
+        this.timeFrom = timeFrom;
+    }
+
+    public String getTimeTo() {
+        return timeTo;
+    }
+
+    public void setTimeTo(String timeTo) {
+        this.timeTo = timeTo;
+    }
+
     public List<PostData> getPostData() {
         return postData;
     }
 
-    public PostData getSelectedPost() {
-        return selectedPost;
+    public List<PostData> getSearchResults() {
+        return searchResults;
     }
 
-    public void setSelectedPost(PostData selectedPost) {
-        this.selectedPost = selectedPost;
+    public void setSearchResults(List<PostData> searchResults) {
+        this.searchResults = searchResults;
     }
+
+    public List<String> getMessageKeys() {
+        return messageKeys;
+    }
+
+    public int getMessageSize() {
+        return messageKeys.size();
+    }
+public String home(){
+    return "dashboard";
+}
+
     public String inspect() {
-//        List<Data> dataSet = StudentBean.dataSet;
-//        if (!selectedSection.isEmpty()) {
-//
-//            for (int i = 0; i < dataSet.size(); i++) {
-//                Data data = dataSet.get(i);
-//                if (!data.getSection().equals(selectedSection)) {
-//                    dataSet.remove(data);
-//                }
-//            }
-//            System.out.println("here*******************************************************");
-//            StudentBean.dataSet = dataSet;
-//            StudentBean.newDataSet = true;
-//            return "basicSearch";
-//        }
 
         QueryBuilder builder = new QueryBuilder();
+        searchResults = new ArrayList<>();
         try {
-            XMLGregorianCalendar dateBegin=XMLGregorianCalendarImpl.createDateTime(dateFrom.getYear(), dateFrom.getMonth(), dateFrom.getDay(),
-                    dateFrom.getHours(), dateFrom.getMinutes(), dateFrom.getSeconds());
-            XMLGregorianCalendar dateEnd=XMLGregorianCalendarImpl.createDateTime(dateTo.getYear(), dateTo.getMonth(), dateTo.getDay(),
-                    dateTo.getHours(), dateTo.getMinutes(), dateTo.getSeconds());
+            XMLGregorianCalendar dateBegin = SearchService.convertToXMLGregorianCalendar(dateFrom);
+            XMLGregorianCalendar dateEnd=SearchService.convertToXMLGregorianCalendar(dateTo);
             QueryDTO query = builder.buildQuery(section, group, dateBegin, dateEnd, limit);
+
             List<PostDTO> posts = UniBoardClient.sendQuery(query);
-
-            for (int i = 0; i < posts.size(); i++) {
-                PostDTO post = posts.get(i);
+            boolean found = false;
+            for (PostDTO post : posts) {
                 PostData data = new PostData(post);
-                postData.add(data);
-            }
-            return "basicSearch";
+                if (!found) {
+                    messageKeys = data.getMessageKeys();
+                    found = true;
+                }
+                searchResults.add(data);
 
-        } catch (MissingQueryParametersException exception) {
+            }
+            return "basicSearchResults";
+
+        }
+        catch(DatatypeConfigurationException exception){
+            System.out.println("Data type configuration error!");
+        }catch (Exception exception) {
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
-        return null;
-    }
 
-    public String viewPost(PostData post){
-        this.selectedPost = post;
-        return "postDetails";
-    }
-
-    @PostConstruct
-    public void init(){
-        postData = UniBoardClient.getTop50MostRecentPosts();
+        return "null";
     }
 }
