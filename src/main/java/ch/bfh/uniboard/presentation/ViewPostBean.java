@@ -11,6 +11,7 @@
  */
 package ch.bfh.uniboard.presentation;
 
+import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
 import java.util.Map;
 import javax.faces.bean.ApplicationScoped;
@@ -36,6 +37,8 @@ public class ViewPostBean {
     private String message;
 
     private String signature;
+
+    private String publicKey;
 
     private String boardSignature;
 
@@ -90,6 +93,14 @@ public class ViewPostBean {
     public void setSignature(String signature) {
         this.signature = signature;
     }
+    
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public void setBoardSignature(String boardSignature) {
         this.boardSignature = boardSignature;
@@ -101,6 +112,7 @@ public class ViewPostBean {
         timeStamp = post.getDate();
         message = getMessageContents(post);
         signature = post.getSignature();
+        publicKey = post.getPublicKey();
         boardSignature = post.getBoardSignature();
 
         RequestContext context = RequestContext.getCurrentInstance();
@@ -109,11 +121,13 @@ public class ViewPostBean {
     }
     private String getMessageContents(PostData post){
         String messageContents="";
-        Map<String, Object> map= post.getMessagePayload();
+        Map<String, Object> map = post.getMessagePayload();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
+            if(!key.equals(Keys.MESSAGE_ID)){
             Object value = entry.getValue();
             messageContents = messageContents+key+": "+value+" <br />";
+            }
         }
         return messageContents;
     }

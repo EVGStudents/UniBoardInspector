@@ -22,13 +22,15 @@ public class Groups {
  public static String STUDENT = "student";
  public static String TEACHER = "teacher";
  public static String CLASSROOM = "classroom";
+ public static String CERTGEN="certgen";
 
     public static List<String> getAllGroups() {
 
         List<String> groups = new ArrayList<String>();
-        groups.add("teacher");
-        groups.add("classroom");
-        groups.add("student");
+        groups.add(STUDENT);
+        groups.add(TEACHER);
+        groups.add(CLASSROOM);
+        groups.add(CERTGEN);
         return groups;
     }
 }

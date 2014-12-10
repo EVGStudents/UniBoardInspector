@@ -16,8 +16,11 @@ import ch.bfh.uniboard.data.BetaIdentifierDTO;
 import ch.bfh.uniboard.data.ConstraintDTO;
 import ch.bfh.uniboard.data.DateValueDTO;
 import ch.bfh.uniboard.data.EqualDTO;
+import ch.bfh.uniboard.data.GreaterDTO;
 import ch.bfh.uniboard.data.GreaterEqualDTO;
 import ch.bfh.uniboard.data.InDTO;
+import ch.bfh.uniboard.data.IntegerValueDTO;
+import ch.bfh.uniboard.data.LessDTO;
 import ch.bfh.uniboard.data.LessEqualDTO;
 import ch.bfh.uniboard.data.MessageIdentifierDTO;
 import ch.bfh.uniboard.data.StringValueDTO;
@@ -34,43 +37,10 @@ public class ConstraintHandler {
 
     public static ConstraintDTO handleSectionConstraint(String section) {
 
-        if(section != null && !section.isEmpty()){
-        AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("section");
-        ValueDTO value = new StringValueDTO(section);
-        ConstraintDTO constraint = new EqualDTO(alphaIdentifier, value);
-        return constraint;
-        }
-        return null;
-    }
-
-    public static ConstraintDTO handleSectionConstraint(List<String> sections) {
-
-        if (sections != null && !sections.isEmpty()) {
-        List<ValueDTO> values = new ArrayList<>();
-        for (int i = 0; i < sections.size(); i++) {
-            ValueDTO value = new StringValueDTO(sections.get(i));
-            values.add(value);
-        }
-        AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("section");
-
-        ConstraintDTO constraint = new InDTO(alphaIdentifier, values);
-        return constraint;
-        }
-        return null;
-    }
-
-    public static ConstraintDTO handleGroupConstraint(List<String> groups) {
-
-        if (groups != null && !groups.isEmpty()) {
-            List<ValueDTO> values = new ArrayList<>();
-
-            for (int i = 0; i < groups.size(); i++) {
-                ValueDTO value = new StringValueDTO(groups.get(i));
-                values.add(value);
-            }
-            AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("group");
-
-            ConstraintDTO constraint = new InDTO(alphaIdentifier, values);
+        if (section != null && !section.isEmpty()) {
+            AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("section");
+            ValueDTO value = new StringValueDTO(section);
+            ConstraintDTO constraint = new EqualDTO(alphaIdentifier, value);
             return constraint;
         }
         return null;
@@ -109,17 +79,71 @@ public class ConstraintHandler {
         return null;
     }
 
-    public static ConstraintDTO handleMessageConstraint(String message) {
+    public static ConstraintDTO handleSectionConstraint(List<String> sections) {
+
+        if (sections != null && !sections.isEmpty()) {
+            List<ValueDTO> values = new ArrayList<>();
+            for (String section : sections) {
+                ValueDTO value = new StringValueDTO(section);
+                values.add(value);
+            }
+            AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("section");
+
+            ConstraintDTO constraint = new InDTO(alphaIdentifier, values);
+            return constraint;
+        }
+        return null;
+    }
+
+    public static ConstraintDTO handleGroupConstraint(List<String> groups) {
+
+        if (groups != null && !groups.isEmpty()) {
+            List<ValueDTO> values = new ArrayList<>();
+
+            for (int i = 0; i < groups.size(); i++) {
+                ValueDTO value = new StringValueDTO(groups.get(i));
+                values.add(value);
+            }
+            AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("group");
+
+            ConstraintDTO constraint = new InDTO(alphaIdentifier, values);
+            return constraint;
+        }
+        return null;
+    }
+
+    public static ConstraintDTO handleRankConstraintEqual(int rank) {
+        if (rank > 0) {
+            BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
+            ValueDTO rankValue = new IntegerValueDTO(rank);
+            ConstraintDTO constraint = new EqualDTO(betaIdentifier, rankValue);
+            return constraint;
+        }
+        return null;
+    }
+
+    public static ConstraintDTO handleRankConstraintLessThan(int rank) {
+        if (rank > 0 ) {
+            BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
+            ValueDTO rankValue = new IntegerValueDTO(rank);
+            ConstraintDTO constraint = new LessDTO(betaIdentifier, rankValue);
+            return constraint;
+        }
+        return null;
+    }
+     public static ConstraintDTO handleRankConstraintMoreThan(int rank) {
+        if (rank > 0 ) {
+            BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
+            ValueDTO rankValue = new IntegerValueDTO(rank);
+            ConstraintDTO constraint = new GreaterDTO(betaIdentifier, rankValue);
+            return constraint;
+        }
+        return null;
+    }
+
+    public static ConstraintDTO handleMessageConstraintMoreThan(String message) {
 
         MessageIdentifierDTO messageIdentifier = IdentifierDTOHelper.getMessageIdentifier(message);
-        return null;
-    }
-
-    public static ConstraintDTO handleRankConstraint() {
-        return null;
-    }
-
-    public static ConstraintDTO handleOrderConstraint() {
         return null;
     }
 

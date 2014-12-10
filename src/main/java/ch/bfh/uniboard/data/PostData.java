@@ -33,24 +33,32 @@ public class PostData {
     private String section;
     private String group;
     private String signature;
+    private String publicKey;
     private String date;
     private int rank;
     private String boardSignature;
     private Map<String,Object> messagePayload;
+    private List<String> messageKeys;
+    private int messageSize;
 
     public PostData(PostDTO post) {
         extractValues(post);
     }
 
-    public String getParameterValue(String parameterName){
-        return messagePayload.get(parameterName).toString();
-    }
     public String getSignature() {
         return signature;
     }
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public String getDate() {
@@ -109,26 +117,35 @@ public class PostData {
         return new ArrayList<>(messagePayload.keySet());
     }
 
+    public void setMessageKeys(List<String> messageKeys) {
+        this.messageKeys = messageKeys;
+    }
+
     public int getMessageSize() {
-        return messagePayload.keySet().size();
+        return messageSize;
+    }
+
+    public void setMessageSize(int messageSize) {
+        this.messageSize = messageSize;
     }
 
     public void setMessagePayload(Map<String, Object> messagePayload) {
         this.messagePayload = messagePayload;
     }
 
+    public String getParameterValue(String parameterName){
+        return messagePayload.get(parameterName).toString();
+    }
     private void extractValues(PostDTO post) {
-
-        this.message = post.getMessage().toString();
 
         try {
             this.messagePayload = MessageHandler.getParametersFromPayload(post.message);
-//            this.messageKeys = new ArrayList<>(messagePayload.keySet());
-//            this.messageSize = messageKeys.size();
+            this.messageKeys = new ArrayList<>(messagePayload.keySet());
+            this.messageSize = messageKeys.size();
         } catch (JSONException ex) {
             Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        this.message = (String)messagePayload.get(Keys.MESSAGE_ID);
         AttributesDTO alphaAttributes = post.getAlpha();
         List<AttributeDTO> attributeList = alphaAttributes.getAttribute();
         for (int i = 0; i < attributeList.size(); i++) {
@@ -142,6 +159,9 @@ public class PostData {
             }
             if (key.equals(Keys.SIGNATURE)) {
                 this.signature = ((StringValueDTO) value).getValue();
+            }
+            if(key.equals(Keys.PUBLIC_KEY)){
+                this.publicKey = ((StringValueDTO) value).getValue();
             }
         }
 
@@ -177,17 +197,14 @@ public class PostData {
         int hour= timestamp.getHour();
         String h =""+hour;
         if(hour<10){
-            m = "0"+ hour;
+            h = "0"+ hour;
         }
         int minute= timestamp.getMinute();
         String min = ""+minute;
         if(minute<10){
             min = "0"+ minute;
         }
-
-        String date = d+"/"+ m +"/"+timestamp.getYear()+" "+
-                        h+":"+m;
-        return date;
-
+        return  d+"/"+ m +"/"+timestamp.getYear()+"   "+
+                        h+":"+min;
     }
 }

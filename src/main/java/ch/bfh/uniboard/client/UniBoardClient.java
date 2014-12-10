@@ -40,17 +40,17 @@ public class UniBoardClient {
     public static List<PostData> getTop50MostRecentPosts() {
 
         QueryBuilder builder = new QueryBuilder();
-            QueryDTO query = builder.buildQuery();
-            List<PostDTO> posts = sendQuery(query);
+        QueryDTO query = builder.buildQuery();
+        List<PostDTO> posts = sendQuery(query);
 
-            List<PostData> postData = convertToPostData(posts);
+        List<PostData> postData = convertToPostData(posts);
 
-            printMessages(posts);
-            return postData;
+        // printMessages(posts);
+        return postData;
     }
 
     public static List<PostDTO> sendQuery(QueryDTO query) {
-        ResultContainerDTO resultContainer = new ResultContainerDTO();
+        ResultContainerDTO resultContainer;
         try {
             URL wsdlLocation = new URL("http://urd:5080/UniBoardService/UniBoardServiceImpl?wsdl");
             QName qname = new QName("http://uniboard.bfh.ch/", "UniBoardService");
@@ -67,27 +67,27 @@ public class UniBoardClient {
         return null;
     }
 
-    public static void printMessages(List<PostDTO> posts) {
-
-        int nbMessages = posts.size();
-        List<Character> messageChar = new ArrayList<Character>();
-        for (int i = 0; i < nbMessages; i++) {
-            byte[] message = posts.get(i).getMessage();
-            System.out.println("Message" + (i + 1));
-            for (int j = 0; j < message.length; j++) {
-                System.out.print((char) message[j]);
-                messageChar.add((char) message[j]);
-            }
-            PostData data = new PostData(posts.get(i));
-            System.out.println();
-            System.out.println("Message: " + data.getMessage());
-            System.out.println("Date: " + data.getDate());
-            System.out.println("Section: " + data.getSection());
-            System.out.println("Group: " + data.getGroup());
-            System.out.println();
-        }
-    }
-
+//    public static void printMessages(List<PostDTO> posts) {
+//
+//        int nbMessages = posts.size();
+//        List<Character> messageChar = new ArrayList<Character>();
+//        for (int i = 0; i < nbMessages; i++) {
+//            byte[] message = posts.get(i).getMessage();
+//            System.out.println("Message" + (i + 1));
+//            for (int j = 0; j < message.length; j++) {
+//                System.out.print((char) message[j]);
+//                messageChar.add((char) message[j]);
+//            }
+//            PostData data = new PostData(posts.get(i));
+//            System.out.println();
+//            System.out.println("Message: " + data.getMessage());
+//            System.out.println("Date: " + data.getDate());
+//            System.out.println("Section: " + data.getSection());
+//            System.out.println("Group: " + data.getGroup());
+//            System.out.println();
+//        }
+//    }
+//
     private static List<PostData> convertToPostData(List<PostDTO> posts) {
         List<PostData> postData = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {

@@ -11,21 +11,22 @@
  */
 package ch.bfh.uniboard.presentation;
 
-import ch.bfh.uniboard.client.QueryBuilder;
 import ch.bfh.uniboard.client.UniBoardClient;
 import ch.bfh.uniboard.data.DefaultValues;
-import ch.bfh.uniboard.data.PostDTO;
+import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
-import ch.bfh.uniboard.data.QueryDTO;
+import ch.bfh.uniboard.service.MessageFactory;
+import ch.bfh.uniboard.service.SearchService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 
 /**
  *
@@ -135,39 +136,47 @@ public class BasicSearchBean {
     public int getMessageSize() {
         return messageKeys.size();
     }
-public String home(){
-    return "dashboard";
-}
+
+    public String home() {
+        return "dashboard";
+    }
 
     public String inspect() {
-
-        QueryBuilder builder = new QueryBuilder();
-        searchResults = new ArrayList<>();
         try {
-            XMLGregorianCalendar dateBegin = SearchService.convertToXMLGregorianCalendar(dateFrom);
-            XMLGregorianCalendar dateEnd=SearchService.convertToXMLGregorianCalendar(dateTo);
-            QueryDTO query = builder.buildQuery(section, group, dateBegin, dateEnd, limit);
-
-            List<PostDTO> posts = UniBoardClient.sendQuery(query);
-            boolean found = false;
-            for (PostDTO post : posts) {
-                PostData data = new PostData(post);
-                if (!found) {
-                    messageKeys = data.getMessageKeys();
-                    found = true;
-                }
-                searchResults.add(data);
-
+            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+            if(searchResults!=null && !searchResults.isEmpty()){
+                 PostData data = searchResults.get(0);
+                  messageKeys = data.getMessageKeys();
+                  messageKeys.remove(Keys.MESSAGE_ID);
             }
-            return "basicSearchResults";
 
-        }
-        catch(DatatypeConfigurationException exception){
+//            postData = searchResults;
+//            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+//            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+            return "basicSearchResults";
+        } catch (DatatypeConfigurationException exception) {
             System.out.println("Data type configuration error!");
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
-
         return "null";
     }
+
+    public void inspectBasicSearch(){
+        try {
+            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+            if(searchResults!=null && !searchResults.isEmpty()){
+                 PostData data = searchResults.get(0);
+                  messageKeys = data.getMessageKeys();
+                  messageKeys.remove(Keys.MESSAGE_ID);
+            }
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (DatatypeConfigurationException exception) {
+            System.out.println("Data type configuration error!");
+        } catch (Exception exception) {
+            MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
+        }
+    }
+
 }

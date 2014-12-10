@@ -10,7 +10,7 @@
  * See terms of license at gnu.org.
  */
 
-package ch.bfh.uniboard.presentation;
+package ch.bfh.uniboard.service;
 
 import java.text.MessageFormat;
 import java.util.Locale;
