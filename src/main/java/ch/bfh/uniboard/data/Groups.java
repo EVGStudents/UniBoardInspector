@@ -19,18 +19,22 @@ import java.util.List;
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 public class Groups {
- public static String STUDENT = "student";
- public static String TEACHER = "teacher";
- public static String CLASSROOM = "classroom";
- public static String CERTGEN="certgen";
+ public static String VOTERS = "Voters";
+ public static String ELECTION_DATA = "ElectionData";
+ public static String CANDIDATES = "Candidates";
+ public static String BALLOTS="Ballots";
+ public static String DECRYPTED_VOTES="DecryptedVotes";
+ public static String ELECTION_RESULT="ElectionResult";
 
     public static List<String> getAllGroups() {
 
-        List<String> groups = new ArrayList<String>();
-        groups.add(STUDENT);
-        groups.add(TEACHER);
-        groups.add(CLASSROOM);
-        groups.add(CERTGEN);
+        List<String> groups = new ArrayList<>();
+        groups.add(VOTERS);
+        groups.add(ELECTION_DATA);
+        groups.add(CANDIDATES);
+        groups.add(BALLOTS);
+        groups.add(DECRYPTED_VOTES);
+        groups.add(ELECTION_RESULT);
         return groups;
     }
 }

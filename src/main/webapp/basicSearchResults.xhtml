@@ -42,7 +42,7 @@ See terms of license at gnu.org.
                             <p:selectOneMenu value="#{basicSearchBean.section}">
                                 <f:selectItem itemLabel="Select Section" itemValue=""/>
                                 <f:selectItems value="#{populateBean.sections}" var="section"
-   			itemLabel="#{section}" itemValue="#{section}" /> 
+   			              itemLabel="#{section}" itemValue="#{section}" /> 
                             </p:selectOneMenu>
 
                             <h:outputText value="Group:" styleClass="info"/>
@@ -59,7 +59,7 @@ See terms of license at gnu.org.
                             <p:calendar size="15" value="#{basicSearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true"/>
 
                             <h:outputText value="Limit:" styleClass="info"/>
-                            <p:spinner min="1" size="9" value="#{basicSearchBean.limit}"/>
+                            <p:spinner min="1" size="12" value="#{basicSearchBean.limit}"/>
                         </h:panelGrid>
                         <br/> <br /> <br />
                         <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{basicSearchBean.inspectBasicSearch()}"/>
@@ -117,20 +117,20 @@ See terms of license at gnu.org.
 
         <!--******************************************** Dialog for Advanced Search ********************************** -->
          <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="500" width="1000">
-            <h:form id="searchForm">
+            <h:form id="advancedSearchForm2">
                 <h:panelGrid columns="4">
 
                     <p:column>
                         <h:outputText value="Section:" styleClass="info"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio binding="#{sectionScope}" value="#{advancedSearchBean.sectionScope}">
+                        <p:selectOneRadio id="b1" binding="#{sectionScope}" value="#{advancedSearchBean.sectionScope}">
                             <f:selectItem itemLabel="All" itemValue="All" />
                             <p:ajax update="sections" />
                         </p:selectOneRadio>
                     </p:column>
                     <p:column>
-                        <p:selectManyCheckbox id="sections" value="#{advancedSearchBean.sections}" layout="grid" columns="3">
+                        <p:selectManyCheckbox id="sections2" value="#{advancedSearchBean.sections}" layout="grid" columns="3">
                             <f:selectItems value="#{populateBean.sections}" />
                         </p:selectManyCheckbox>
                     </p:column>
@@ -142,12 +142,12 @@ See terms of license at gnu.org.
                         <h:outputText value="Group:" styleClass="info"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio value="#{advancedSearchBean.groupScope}">
+                        <p:selectOneRadio id="b2" value="#{advancedSearchBean.groupScope}">
                             <f:selectItem itemLabel="All" itemValue="All" />
                         </p:selectOneRadio>
                     </p:column>
                     <p:column>
-                        <p:selectManyCheckbox value="#{advancedSearchBean.groups}" layout="grid" columns="3">
+                        <p:selectManyCheckbox id="b3" value="#{advancedSearchBean.groups}" layout="grid" columns="3">
                             <f:selectItems value="#{populateBean.groups}" />
                         </p:selectManyCheckbox>
                     </p:column>
@@ -185,17 +185,17 @@ See terms of license at gnu.org.
                         <h:outputText value="Rank:" styleClass="info"/>  
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio binding="#{rankScope}" layout="grid" columns="1" >
+                        <p:selectOneRadio id="b4" binding="#{rankScope}" layout="grid" columns="1" >
                             <f:selectItem itemLabel="Equal To" itemValue="Equal To" />
                             <f:selectItem itemLabel="Less Than" itemValue="Less Than" />
                             <f:selectItem itemLabel="More Than" itemValue="More Than" />
                             <f:selectItem itemLabel="Between" itemValue="Between" />
-                            <p:ajax update="rank2" />
+                            <p:ajax update="rank2b" />
                         </p:selectOneRadio>
                     </p:column>
                     <p:column>
                         <p:spinner min="1" size="12"/> <br /> 
-                        <p:spinner id="rank2" disabled="#{rankScope.value != 'Between'}" min="1" size="12"/>
+                        <p:spinner id="rank2b" disabled="#{rankScope.value != 'Between'}" min="1" size="12"/>
                     </p:column>
                     <p:column>
                         <h:outputText id="rank_error1" value="Error message" />
@@ -212,7 +212,7 @@ See terms of license at gnu.org.
                     </p:column>
                 </h:panelGrid>
                 <br/> <br /> <br />
-                <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{advancedSearchBean.inspect()}"/>
+                <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton2" action="#{advancedSearchBean.inspect()}"/>
             </h:form>
         </p:dialog> 
         <!-- *********************************** Dialog for Post View *********************************  -->

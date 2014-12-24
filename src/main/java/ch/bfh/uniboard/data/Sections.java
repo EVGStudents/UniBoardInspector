@@ -21,15 +21,15 @@ import java.util.List;
 public class Sections {
 
     public static String HESB = "HESB";
-    public static String ETHZ = "ETHZ";
-    public static String EPFL = "EPFL";
+    public static String UZH = "UZH";
+    public static String UNIBE = "UNIBE";
 
     public static List<String> getAllSections() {
 
-        List<String> sections = new ArrayList<String>();
-        sections.add("HESB");
-        sections.add("EPFL");
-        sections.add("ETHZ");
+        List<String> sections = new ArrayList<>();
+        sections.add(HESB);
+        sections.add(UZH);
+        sections.add(UNIBE);
         return sections;
     }
 }

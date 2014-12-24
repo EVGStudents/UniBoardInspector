@@ -141,6 +141,15 @@ public class ConstraintHandler {
         return null;
     }
 
+     public static ConstraintDTO handlePublicKeyConstraint(String publicKey){
+         if (publicKey != null && !publicKey.isEmpty()) {
+            AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("key");
+            ValueDTO value = new StringValueDTO(publicKey);
+            ConstraintDTO constraint = new EqualDTO(alphaIdentifier, value);
+            return constraint;
+        }
+        return null;
+     }
     public static ConstraintDTO handleMessageConstraintMoreThan(String message) {
 
         MessageIdentifierDTO messageIdentifier = IdentifierDTOHelper.getMessageIdentifier(message);

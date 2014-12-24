@@ -50,7 +50,7 @@ public class BasicSearchBean {
 
     private int limit = DefaultValues.LIMIT;
 
-    private List<PostData> postData = new ArrayList<>();
+    private List<PostData> postDataList = new ArrayList<>();
 
     private List<PostData> searchResults = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class BasicSearchBean {
 
     @PostConstruct
     public void init() {
-        postData = UniBoardClient.getTop50MostRecentPosts();
+        postDataList = UniBoardClient.getTop50MostRecentPosts();
     }
 
     public String getSection() {
@@ -117,16 +117,20 @@ public class BasicSearchBean {
         this.timeTo = timeTo;
     }
 
-    public List<PostData> getPostData() {
-        return postData;
-    }
-
     public List<PostData> getSearchResults() {
         return searchResults;
     }
 
     public void setSearchResults(List<PostData> searchResults) {
         this.searchResults = searchResults;
+    }
+
+    public List<PostData> getPostDataList() {
+        return postDataList;
+    }
+
+    public void setPostDataList(List<PostData> postDataList) {
+        this.postDataList = postDataList;
     }
 
     public List<String> getMessageKeys() {
@@ -141,19 +145,31 @@ public class BasicSearchBean {
         return "dashboard";
     }
 
+    public void clearDate(String name){
+       if(name.equals("dateFrom")){
+           dateFrom=null;
+       }
+       if(name.equals("dateTo")){
+           dateTo=null;
+       }
+    }
+
     public String inspect() {
         try {
             searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-            if(searchResults!=null && !searchResults.isEmpty()){
-                 PostData data = searchResults.get(0);
-                  messageKeys = data.getMessageKeys();
-                  messageKeys.remove(Keys.MESSAGE_ID);
+            if (searchResults != null && !searchResults.isEmpty()) {
+                PostData data = searchResults.get(0);
+                messageKeys = data.getMessageKeys();
+                messageKeys.remove(Keys.MESSAGE_ID);
             }
-
-//            postData = searchResults;
-//            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-//            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-            return "basicSearchResults";
+            if (!group.isEmpty()) {
+                return "basicSearchResults";
+            } else {
+                postDataList=searchResults;
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+            }
+            return "";
         } catch (DatatypeConfigurationException exception) {
             System.out.println("Data type configuration error!");
         } catch (Exception exception) {
@@ -162,13 +178,13 @@ public class BasicSearchBean {
         return "null";
     }
 
-    public void inspectBasicSearch(){
+    public void inspectBasicSearch() {
         try {
             searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-            if(searchResults!=null && !searchResults.isEmpty()){
-                 PostData data = searchResults.get(0);
-                  messageKeys = data.getMessageKeys();
-                  messageKeys.remove(Keys.MESSAGE_ID);
+            if (searchResults != null && !searchResults.isEmpty()) {
+                PostData data = searchResults.get(0);
+                messageKeys = data.getMessageKeys();
+                messageKeys.remove(Keys.MESSAGE_ID);
             }
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());

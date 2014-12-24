@@ -37,7 +37,7 @@ public class PostData {
     private String date;
     private int rank;
     private String boardSignature;
-    private Map<String,Object> messagePayload;
+    private Map<String, Object> messagePayload;
     private List<String> messageKeys;
     private int messageSize;
 
@@ -133,9 +133,14 @@ public class PostData {
         this.messagePayload = messagePayload;
     }
 
-    public String getParameterValue(String parameterName){
-        return messagePayload.get(parameterName).toString();
+    public String getParameterValue(String parameterName) {
+        Object parameterValue = messagePayload.get(parameterName);
+        if (parameterValue != null) {
+            return messagePayload.get(parameterName).toString();
+        }
+        return "";
     }
+
     private void extractValues(PostDTO post) {
 
         try {
@@ -145,7 +150,7 @@ public class PostData {
         } catch (JSONException ex) {
             Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.message = (String)messagePayload.get(Keys.MESSAGE_ID);
+        this.message = (String) messagePayload.get(Keys.MESSAGE_ID);
         AttributesDTO alphaAttributes = post.getAlpha();
         List<AttributeDTO> attributeList = alphaAttributes.getAttribute();
         for (int i = 0; i < attributeList.size(); i++) {
@@ -160,7 +165,7 @@ public class PostData {
             if (key.equals(Keys.SIGNATURE)) {
                 this.signature = ((StringValueDTO) value).getValue();
             }
-            if(key.equals(Keys.PUBLIC_KEY)){
+            if (key.equals(Keys.PUBLIC_KEY)) {
                 this.publicKey = ((StringValueDTO) value).getValue();
             }
         }
@@ -182,29 +187,30 @@ public class PostData {
             }
         }
     }
-    private String formatDate(XMLGregorianCalendar timestamp){
+
+    private String formatDate(XMLGregorianCalendar timestamp) {
 
         int day = timestamp.getDay();
-        String d= ""+day;
-        if(day<10){
-            d = "0"+day;
+        String d = "" + day;
+        if (day < 10) {
+            d = "0" + day;
         }
         int month = timestamp.getMonth();
-        String m =""+month;
-        if(month<10){
-            m = "0"+ month;
+        String m = "" + month;
+        if (month < 10) {
+            m = "0" + month;
         }
-        int hour= timestamp.getHour();
-        String h =""+hour;
-        if(hour<10){
-            h = "0"+ hour;
+        int hour = timestamp.getHour();
+        String h = "" + hour;
+        if (hour < 10) {
+            h = "0" + hour;
         }
-        int minute= timestamp.getMinute();
-        String min = ""+minute;
-        if(minute<10){
-            min = "0"+ minute;
+        int minute = timestamp.getMinute();
+        String min = "" + minute;
+        if (minute < 10) {
+            min = "0" + minute;
         }
-        return  d+"/"+ m +"/"+timestamp.getYear()+"   "+
-                        h+":"+min;
+        return d + "/" + m + "/" + timestamp.getYear() + "   "
+                + h + ":" + min;
     }
 }
