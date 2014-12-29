@@ -64,8 +64,8 @@ See terms of license at gnu.org.
                         <br/> <br /> <br />
                         <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{basicSearchBean.inspectBasicSearch()}"/>
                         <br/><br/> <br />
-                        <p:commandLink value="Advanced Search" styleClass="title" onclick="PF('advancedSearch').show();"  />
-                        <br/><br/> <br/>
+<!--                        <p:commandLink value="Advanced Search" styleClass="title" onclick="PF('advancedSearch').show();"  />
+                        <br/><br/> <br/>-->
                         <p:commandButton value="View Top 50 Most Recent Posts" style="font-weight: bold; color: red;" action="#{basicSearchBean.home()}" />
                     </h:form>
                     <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
@@ -116,7 +116,7 @@ See terms of license at gnu.org.
         </p:layout>
 
         <!--******************************************** Dialog for Advanced Search ********************************** -->
-         <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="500" width="1000">
+<!--         <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="500" width="1000">
             <h:form id="advancedSearchForm2">
                 <h:panelGrid columns="4">
 
@@ -126,7 +126,6 @@ See terms of license at gnu.org.
                     <p:column>
                         <p:selectOneRadio id="b1" binding="#{sectionScope}" value="#{advancedSearchBean.sectionScope}">
                             <f:selectItem itemLabel="All" itemValue="All" />
-                            <p:ajax update="sections" />
                         </p:selectOneRadio>
                     </p:column>
                     <p:column>
@@ -212,10 +211,10 @@ See terms of license at gnu.org.
                     </p:column>
                 </h:panelGrid>
                 <br/> <br /> <br />
-                <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton2" action="#{advancedSearchBean.inspect()}"/>
+                <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton2" action="#{advancedSearchBean.inspectAdvancedSearch()}"/>
             </h:form>
-        </p:dialog> 
-        <!-- *********************************** Dialog for Post View *********************************  -->
+        </p:dialog> -->
+        <!-- *********************************** Dialog for View Post *********************************  -->
 
         <p:dialog header="Post Details" widgetVar="viewPost" height="550" width="800" >
             <h:form id="postForm">

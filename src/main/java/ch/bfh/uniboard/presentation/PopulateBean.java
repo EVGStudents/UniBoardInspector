@@ -14,6 +14,7 @@ package ch.bfh.uniboard.presentation;
 
 import ch.bfh.uniboard.data.Groups;
 import ch.bfh.uniboard.data.Sections;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -26,7 +27,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean
 @ApplicationScoped
-public class PopulateBean {
+public class PopulateBean implements Serializable{
 
     private List<String> sections = new ArrayList<String>();
 

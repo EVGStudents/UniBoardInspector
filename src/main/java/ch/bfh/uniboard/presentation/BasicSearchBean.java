@@ -17,6 +17,7 @@ import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
 import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
  */
 @ManagedBean
 @SessionScoped
-public class BasicSearchBean {
+public class BasicSearchBean implements Serializable{
 
     private String section = "";
 
@@ -169,13 +170,12 @@ public class BasicSearchBean {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
             }
-            return "";
         } catch (DatatypeConfigurationException exception) {
             System.out.println("Data type configuration error!");
         } catch (Exception exception) {
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
-        return "null";
+        return null;
     }
 
     public void inspectBasicSearch() {
@@ -194,5 +194,4 @@ public class BasicSearchBean {
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
     }
-
 }

@@ -18,7 +18,6 @@ import ch.bfh.uniboard.data.Groups;
 import ch.bfh.uniboard.data.OrderDTO;
 import ch.bfh.uniboard.data.QueryDTO;
 import ch.bfh.uniboard.data.Sections;
-import ch.bfh.uniboard.exception.MissingQueryParametersException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,6 +32,8 @@ public class QueryBuilder {
     private static final Logger logger = Logger.getLogger(QueryBuilder.class.getName());
 
     public QueryDTO buildQuery() {
+
+        logger.info("Build Query");
 
         List<ConstraintDTO> constraintList = new ArrayList<>();
 
@@ -55,12 +56,11 @@ public class QueryBuilder {
         return query;
     }
 
-    public QueryDTO buildQuery(String section, String group, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit)
-            throws MissingQueryParametersException {
+    public QueryDTO buildQuery(String section, String group, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit) {
 
         logger.info("Build Query");
         if (section == null || section.isEmpty()) {
-            throw new MissingQueryParametersException();
+            return null;
         }
         List<ConstraintDTO> constraintList = new ArrayList<>();
 
@@ -90,11 +90,12 @@ public class QueryBuilder {
         return query;
     }
 
-    public QueryDTO buildQuery(List<String> sections, List<String> groups, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit, String rankScope, int rank1, int rank2) throws MissingQueryParametersException {
+    public QueryDTO buildQuery(List<String> sections, List<String> groups, XMLGregorianCalendar fromDate,
+            XMLGregorianCalendar toDate, int limit, String rankScope, int rank1, int rank2){
 
         logger.info("Build Query");
         if (sections == null || sections.isEmpty()) {
-            throw new MissingQueryParametersException();
+            return null;
         }
         List<ConstraintDTO> constraintList = new ArrayList<>();
 
@@ -146,6 +147,49 @@ public class QueryBuilder {
 
     }
 
+    public QueryDTO buildQuery(String publickey, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit){
+        logger.info("Build Query Public Key");
+
+        System.out.println("Public Key: "+publickey);
+        if(publickey==null || publickey.isEmpty()){
+            return null;
+        }
+
+        List<ConstraintDTO> constraintList = new ArrayList<>();
+        List<String> sections = Sections.getAllSections();
+
+        List<String> groups = Groups.getAllGroups();
+
+        ConstraintDTO sectionConstraint = ConstraintHandler.handleSectionConstraint(sections);
+
+        ConstraintDTO groupConstraint = ConstraintHandler.handleGroupConstraint(groups);
+
+        constraintList.add(sectionConstraint);
+        constraintList.add(groupConstraint);
+        
+        ConstraintDTO publickeyConstraint = ConstraintHandler.handlePublicKeyConstraint(publickey);
+        ConstraintDTO fromDateConstraint = ConstraintHandler.handleFromDateTimeConstraint(fromDate);
+        ConstraintDTO toDateConstraint = ConstraintHandler.handleToDateTimeConstraint(toDate);
+
+        if(publickeyConstraint!=null){
+            constraintList.add(publickeyConstraint);
+        }
+        if (fromDateConstraint != null) {
+            constraintList.add(fromDateConstraint);
+        }
+        if (toDateConstraint != null) {
+            constraintList.add(toDateConstraint);
+        }
+        List<OrderDTO> orderList = orderByDate(false);
+
+        if (limit <= 0) {
+            limit = DefaultValues.LIMIT;
+        }
+        QueryDTO query = new QueryDTO(constraintList, orderList, limit);
+
+        return query;
+
+    }
     private List<OrderDTO> orderByDate(boolean ascDesc) {
 
         BetaIdentifierDTO timestamp = IdentifierDTOHelper.getBetaIdentifier("timestamp");

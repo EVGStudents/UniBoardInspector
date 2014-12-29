@@ -13,6 +13,8 @@ package ch.bfh.uniboard.data;
 
 import ch.bfh.uniboard.client.MessageHandler;
 import ch.bfh.uniboard.data.AttributesDTO.AttributeDTO;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +152,15 @@ public class PostData {
         } catch (JSONException ex) {
             Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.message = (String) messagePayload.get(Keys.MESSAGE_ID);
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            byte[] msg=md.digest(post.getMessage());
+            md.update(msg);
+            this.message=msg.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         AttributesDTO alphaAttributes = post.getAlpha();
         List<AttributeDTO> attributeList = alphaAttributes.getAttribute();
         for (int i = 0; i < attributeList.size(); i++) {

@@ -46,6 +46,8 @@ public class UniBoardClient {
         List<PostData> postData = convertToPostData(posts);
 
         // printMessages(posts);
+
+
         return postData;
     }
 

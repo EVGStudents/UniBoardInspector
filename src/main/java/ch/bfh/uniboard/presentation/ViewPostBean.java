@@ -93,7 +93,7 @@ public class ViewPostBean {
     public void setSignature(String signature) {
         this.signature = signature;
     }
-    
+
     public String getPublicKey() {
         return publicKey;
     }
@@ -109,6 +109,7 @@ public class ViewPostBean {
     public void postDetails(PostData post) {
         section = post.getSection();
         group = post.getGroup();
+        rank = post.getRank();
         timeStamp = post.getDate();
         message = getMessageContents(post);
         signature = post.getSignature();

@@ -15,6 +15,7 @@ import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostData;
 import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
  */
 @ManagedBean
 @SessionScoped
-public class AdvancedSearchBean {
+public class AdvancedSearchBean implements Serializable{
 
     private String sectionScope;
     private String[] sections;
@@ -152,6 +153,7 @@ public class AdvancedSearchBean {
         } catch (DatatypeConfigurationException exception) {
             System.out.println("Data type configuration error!");
         } catch (Exception exception) {
+            System.out.println("Exception Thrown inspect()");
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
         return "null";
@@ -169,6 +171,7 @@ public class AdvancedSearchBean {
         } catch (DatatypeConfigurationException exception) {
             System.out.println("Data type configuration error!");
         } catch (Exception exception) {
+            System.out.println("Exception Thrown inspect()");
             MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
         }
     }

@@ -51,9 +51,36 @@ public class SearchService {
 
         QueryBuilder builder = new QueryBuilder();
         List<PostData> searchResults = new ArrayList<>();
-            XMLGregorianCalendar dateBegin = convertToXMLGregorianCalendar(dateFrom);
-            XMLGregorianCalendar dateEnd = convertToXMLGregorianCalendar(dateTo);
-            QueryDTO query = builder.buildQuery(section, group, dateBegin, dateEnd, limit);
+        XMLGregorianCalendar dateBegin = convertToXMLGregorianCalendar(dateFrom);
+        XMLGregorianCalendar dateEnd = convertToXMLGregorianCalendar(dateTo);
+        QueryDTO query = builder.buildQuery(section, group, dateBegin, dateEnd, limit);
+
+        List<PostDTO> posts = UniBoardClient.sendQuery(query);
+        if (posts != null && !posts.isEmpty()) {
+            for (PostDTO post : posts) {
+                PostData data = new PostData(post);
+                searchResults.add(data);
+            }
+            return searchResults;
+        }
+          return null;
+    }
+
+    public static List<PostData> getAdvancedSearchResults(List<String> sections, List<String> groups,
+            Date dateFrom, Date dateTo, int limit, String rankScope, int rank1, int rank2) throws Exception{
+
+        QueryBuilder builder = new QueryBuilder();
+        List<PostData> searchResults = new ArrayList<>();
+        XMLGregorianCalendar dateBegin= null;
+        XMLGregorianCalendar dateEnd= null;
+        if (dateFrom != null) {
+            dateBegin = convertToXMLGregorianCalendar(dateFrom);
+        }
+
+        if (dateTo != null) {
+            dateEnd = convertToXMLGregorianCalendar(dateTo);
+        }
+            QueryDTO query = builder.buildQuery(sections, groups, dateBegin, dateEnd, limit,rankScope,rank1, rank2);
 
             List<PostDTO> posts = UniBoardClient.sendQuery(query);
             if(posts!=null && !posts.isEmpty()){
@@ -66,23 +93,28 @@ public class SearchService {
           return null;
     }
 
-    public static List<PostData> getAdvancedSearchResults(List<String> sections, List<String> groups,
-            Date dateFrom, Date dateTo, int limit, String rankScope, int rank1, int rank2) throws Exception{
-
+    public static List<PostData> getPublickeySearchResults(String publickey,Date dateFrom, Date dateTo, int limit) throws Exception{
         QueryBuilder builder = new QueryBuilder();
         List<PostData> searchResults = new ArrayList<>();
-            XMLGregorianCalendar dateBegin = convertToXMLGregorianCalendar(dateFrom);
-            XMLGregorianCalendar dateEnd = convertToXMLGregorianCalendar(dateTo);
-            QueryDTO query = builder.buildQuery(sections, groups, dateBegin, dateEnd, limit,rankScope,rank1, rank2);
-
-            List<PostDTO> posts = UniBoardClient.sendQuery(query);
-            if(posts!=null && !posts.isEmpty()){
+        XMLGregorianCalendar dateBegin = null;
+        XMLGregorianCalendar dateEnd = null;
+        if (dateFrom != null) {
+            dateBegin = convertToXMLGregorianCalendar(dateFrom);
+        }
+        if (dateTo != null) {
+            dateEnd = convertToXMLGregorianCalendar(dateTo);
+        }
+        QueryDTO query = builder.buildQuery(publickey, dateBegin, dateEnd, limit);
+        List<PostDTO> posts = UniBoardClient.sendQuery(query);
+        System.out.println("Post size:"+posts.size());
+        if (posts != null && !posts.isEmpty()) {
             for (PostDTO post : posts) {
                 PostData data = new PostData(post);
                 searchResults.add(data);
             }
+            System.out.println("Search Results size:"+searchResults.size());
             return searchResults;
-            }
-          return null;
+        }
+       return null;
     }
 }

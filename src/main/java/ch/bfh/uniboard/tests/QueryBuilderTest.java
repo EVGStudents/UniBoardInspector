@@ -13,7 +13,6 @@ package ch.bfh.uniboard.tests;
 
 import ch.bfh.uniboard.client.QueryBuilder;
 import ch.bfh.uniboard.data.QueryDTO;
-import ch.bfh.uniboard.exception.MissingQueryParametersException;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,13 +32,11 @@ public class QueryBuilderTest {
 
     @Test
     public void testBuildquery() {
-        try {
+
             QueryDTO query = queryBuilder.buildQuery("HESB", null, null, null, 10);
             assertNotNull(query);
             QueryDTO query1 = queryBuilder.buildQuery();
             assertNotNull(query);
-        } catch (MissingQueryParametersException exp) {
-
-        }
+       
     }
 }
