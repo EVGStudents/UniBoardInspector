@@ -18,15 +18,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-@ManagedBean
-@ApplicationScoped
+@Named
+@SessionScoped
 public class PopulateBean implements Serializable{
 
     private List<String> sections = new ArrayList<String>();

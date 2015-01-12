@@ -14,15 +14,15 @@ package ch.bfh.uniboard.presentation;
 import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
 import java.util.Map;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-@ManagedBean
+@Named
 @ApplicationScoped
 public class ViewPostBean {
 

@@ -10,12 +10,14 @@
  * See terms of license at gnu.org.
  */
 
-package ch.bfh.uniboard.tests;
+package ch.bfh.uniboard.exception;
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-public class UniBoardClientTest {
-
+public class ConstraintHandlerException extends Exception{
+ public ConstraintHandlerException(String message) {
+		super(message);
+	}
 }

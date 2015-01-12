@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Sections {
 
-    public static String HESB = "HESB";
+    public static String HESB = "BFH";
     public static String UZH = "UZH";
     public static String UNIBE = "UNIBE";
 

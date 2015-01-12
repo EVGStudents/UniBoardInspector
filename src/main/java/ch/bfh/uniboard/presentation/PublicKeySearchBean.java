@@ -19,14 +19,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-@ManagedBean
+@Named
 @SessionScoped
 public class PublicKeySearchBean implements Serializable{
 
@@ -38,7 +39,7 @@ public class PublicKeySearchBean implements Serializable{
 
     private int limit = DefaultValues.LIMIT;
 
-    private List<PostData> searchResults = new ArrayList<PostData>();
+    private List<PostData> searchResults = new ArrayList<>();
 
     public String getPublicKey() {
         return publicKey;
@@ -81,14 +82,8 @@ public class PublicKeySearchBean implements Serializable{
     }
 
     public String inspect(){
-        try {
+
             searchResults=SearchService.getPublickeySearchResults(publicKey, dateFrom, dateTo, limit);
-            if(searchResults!=null && !searchResults.isEmpty()){
-            return "publickeySearchResults";
-            }
-        } catch (Exception ex) {
-           System.out.println("PK exception!");
-        }
-        return null;
+            return "publicKeySearchResults";
     }
 }

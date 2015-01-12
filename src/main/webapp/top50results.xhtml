@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2013 Berner Fachhochschule, Switzerland.
+Bern University of Applied Sciences, Engineering and Information Technology,
+Research Institute for Security in the Information Society, E-Voting Group,
+Biel, Switzerland.
+
+Project UniVote.
+
+Distributable under GPL license.
+See terms of license at gnu.org.
+-->
+<!DOCTYPE html>
+<ui:composition template="/dashboard.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+                                xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="content">
+		<h:outputText value="Top 50 Most Recent Posts" style="font-weight: bold; font-size: larger; color: black;" />
+            <h:form id="topForm" >
+                <p:dataTable var="data" value="#{basicSearchBean.postDataList}">
+                    <p:column id="viewPost">
+                        <h:commandButton value="View Post"  action="#{viewPostBean.postDetails(data)}"/>
+                    </p:column>
+                    <p:column id="sectionHeader" filterBy="#{data.section}" sortBy="#{data.section}" styleClass="tableheader">
+                        <f:facet name="header">
+                            <h:outputText value="Section" />
+                        </f:facet>
+                        <h:outputText value="#{data.section}" />
+                    </p:column>
+                    <p:column id="groupHeader" filterBy="#{data.group}" sortBy="#{data.group}">
+                        <f:facet name="header">
+                            <h:outputText value="Group" />
+                        </f:facet>
+                        <h:outputText value="#{data.group}" />
+                    </p:column>
+
+                    <p:column id="dateHeader" filterBy="#{data.date}" sortBy="#{data.date}">
+                        <f:facet name="header">
+                            <h:outputText value="Date" />
+                        </f:facet>
+                        <h:outputText value="#{data.date}" />
+                    </p:column>
+
+                    <p:column id="messageHeader" filterBy="#{data.message}" sortBy="#{data.message}">
+                        <f:facet name="header">
+                            <h:outputText value="Message" />
+                        </f:facet>
+                        <h:outputText value="#{data.message}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+	</ui:define>
+</ui:composition>
+

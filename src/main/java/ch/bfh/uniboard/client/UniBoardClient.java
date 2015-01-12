@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 /**
@@ -29,29 +31,29 @@ import javax.xml.namespace.QName;
  */
 public class UniBoardClient {
 
+    private static final Logger logger = Logger.getLogger(UniBoardClient.class.getName());
+
     private static UniBoardService uniBoardService;
 
-    public static void main(String args[]) {
-
-        getTop50MostRecentPosts();
-
-    }
-
     public static List<PostData> getTop50MostRecentPosts() {
+        logger.info("UniBoardClient sending query to get the top 50 most recent posts");
 
         QueryBuilder builder = new QueryBuilder();
         QueryDTO query = builder.buildQuery();
-        List<PostDTO> posts = sendQuery(query);
-
-        List<PostData> postData = convertToPostData(posts);
-
-        // printMessages(posts);
-
-
-        return postData;
+        System.out.println("Query: "+query.toString());
+        if(query!=null){
+           List<PostDTO> posts = sendQuery(query);
+           return convertToPostData(posts);
+        }
+        return null;
     }
 
     public static List<PostDTO> sendQuery(QueryDTO query) {
+        logger.info("UniBoardClient connecting to UniboardService web service provider");
+      if(query==null){
+          logger.info("A null value was received where a QueryDTO object was expected!");
+          return null;
+      }
         ResultContainerDTO resultContainer;
         try {
             URL wsdlLocation = new URL("http://urd:5080/UniBoardService/UniBoardServiceImpl?wsdl");
@@ -64,9 +66,9 @@ public class UniBoardClient {
             return resultContainer.getResult().getPost();
 
         } catch (MalformedURLException exception) {
-            System.out.println(exception.getMessage());
+            logger.log(Level.SEVERE, exception.getMessage());
+            return null;
         }
-        return null;
     }
 
 //    public static void printMessages(List<PostDTO> posts) {

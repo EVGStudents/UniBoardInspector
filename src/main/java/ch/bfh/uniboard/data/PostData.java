@@ -13,6 +13,7 @@ package ch.bfh.uniboard.data;
 
 import ch.bfh.uniboard.client.MessageHandler;
 import ch.bfh.uniboard.data.AttributesDTO.AttributeDTO;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import org.primefaces.json.JSONException;
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 @XmlRootElement
-public class PostData {
+public class PostData implements Serializable{
 
     private String message;
     private String section;

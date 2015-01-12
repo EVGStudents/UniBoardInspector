@@ -31,12 +31,12 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testBuildquery() {
+    public void testBuildQuery() {
 
             QueryDTO query = queryBuilder.buildQuery("HESB", null, null, null, 10);
             assertNotNull(query);
             QueryDTO query1 = queryBuilder.buildQuery();
             assertNotNull(query);
-       
+
     }
 }

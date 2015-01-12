@@ -27,6 +27,7 @@ import ch.bfh.uniboard.data.StringValueDTO;
 import ch.bfh.uniboard.data.ValueDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
@@ -34,6 +35,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 public class ConstraintHandler {
+
+    private static final Logger logger = Logger.getLogger(ConstraintHandler.class.getName());
 
     public static ConstraintDTO handleSectionConstraint(String section) {
 
@@ -142,6 +145,7 @@ public class ConstraintHandler {
     }
 
      public static ConstraintDTO handlePublicKeyConstraint(String publicKey){
+
          if (publicKey != null && !publicKey.isEmpty()) {
             AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("key");
             ValueDTO value = new StringValueDTO(publicKey);

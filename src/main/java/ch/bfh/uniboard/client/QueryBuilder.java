@@ -20,6 +20,7 @@ import ch.bfh.uniboard.data.QueryDTO;
 import ch.bfh.uniboard.data.Sections;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -33,7 +34,7 @@ public class QueryBuilder {
 
     public QueryDTO buildQuery() {
 
-        logger.info("Build Query");
+        logger.info("Build query to obtain Top 50 most recent posts");
 
         List<ConstraintDTO> constraintList = new ArrayList<>();
 
@@ -58,7 +59,7 @@ public class QueryBuilder {
 
     public QueryDTO buildQuery(String section, String group, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit) {
 
-        logger.info("Build Query");
+        logger.info("Build query for basic search");
         if (section == null || section.isEmpty()) {
             return null;
         }
@@ -91,9 +92,10 @@ public class QueryBuilder {
     }
 
     public QueryDTO buildQuery(List<String> sections, List<String> groups, XMLGregorianCalendar fromDate,
-            XMLGregorianCalendar toDate, int limit, String rankScope, int rank1, int rank2){
+            XMLGregorianCalendar toDate, int limit, String rankScope, int rank1, int rank2, String publicKey){
 
-        logger.info("Build Query");
+        logger.info("Build query for advancedSearch");
+
         if (sections == null || sections.isEmpty()) {
             return null;
         }
@@ -137,6 +139,12 @@ public class QueryBuilder {
             }
         }
 
+        ConstraintDTO publicKeyConstraint = ConstraintHandler.handlePublicKeyConstraint(publicKey);
+
+        if(publicKeyConstraint!=null){
+            constraintList.add(publicKeyConstraint);
+        }
+
         if (limit <= 0) {
             limit = DefaultValues.LIMIT;
         }
@@ -148,9 +156,8 @@ public class QueryBuilder {
     }
 
     public QueryDTO buildQuery(String publickey, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit){
-        logger.info("Build Query Public Key");
+        logger.info("Build query for search by Public Key");
 
-        System.out.println("Public Key: "+publickey);
         if(publickey==null || publickey.isEmpty()){
             return null;
         }
@@ -166,12 +173,12 @@ public class QueryBuilder {
 
         constraintList.add(sectionConstraint);
         constraintList.add(groupConstraint);
-        
+
         ConstraintDTO publickeyConstraint = ConstraintHandler.handlePublicKeyConstraint(publickey);
         ConstraintDTO fromDateConstraint = ConstraintHandler.handleFromDateTimeConstraint(fromDate);
         ConstraintDTO toDateConstraint = ConstraintHandler.handleToDateTimeConstraint(toDate);
 
-        if(publickeyConstraint!=null){
+        if (publickeyConstraint != null) {
             constraintList.add(publickeyConstraint);
         }
         if (fromDateConstraint != null) {
@@ -191,6 +198,7 @@ public class QueryBuilder {
 
     }
     private List<OrderDTO> orderByDate(boolean ascDesc) {
+        logger.log(Level.INFO, "Ordering by date");
 
         BetaIdentifierDTO timestamp = IdentifierDTOHelper.getBetaIdentifier("timestamp");
 

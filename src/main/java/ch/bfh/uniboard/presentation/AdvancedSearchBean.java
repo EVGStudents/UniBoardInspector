@@ -13,26 +13,24 @@ package ch.bfh.uniboard.presentation;
 
 import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostData;
-import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.datatype.DatatypeConfigurationException;
+import java.util.logging.Logger;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-@ManagedBean
+@Named
 @SessionScoped
 public class AdvancedSearchBean implements Serializable{
+
+    private static final Logger logger = Logger.getLogger(AdvancedSearchBean.class.getName());
 
     private String sectionScope;
     private String[] sections;
@@ -144,37 +142,27 @@ public class AdvancedSearchBean implements Serializable{
     }
 
     public String inspect() {
-        try {
+
             System.out.println("********************Rank scope:**************************"+rankScope);
             List<String> groupList = Arrays.asList(groups);
             List<String> sectionList = Arrays.asList(sections);
-            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2);
+            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2, publicKey);
             return "advancedSearchResults";
-        } catch (DatatypeConfigurationException exception) {
-            System.out.println("Data type configuration error!");
-        } catch (Exception exception) {
-            System.out.println("Exception Thrown inspect()");
-            MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
-        }
-        return "null";
     }
 
-    public void inspectAdvancedSearch() {
-
-        try {
-            List<String> groupList = Arrays.asList(groups);
-            List<String> sectionList = Arrays.asList(sections);
-            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2);
-            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-
-        } catch (DatatypeConfigurationException exception) {
-            System.out.println("Data type configuration error!");
-        } catch (Exception exception) {
-            System.out.println("Exception Thrown inspect()");
-            MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
-        }
-    }
+//    public void inspectAdvancedSearch() {
+//
+//            List<String> groupList = Arrays.asList(groups);
+//            List<String> sectionList = Arrays.asList(sections);
+//            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2,publicKey);
+//            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+//           try {
+//            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+//        } catch (IOException exception) {
+//            logger.log(Level.SEVERE, exception.getMessage());
+//            MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");
+//        }
+//    }
      public String home(){
         return "dashboard";
         }

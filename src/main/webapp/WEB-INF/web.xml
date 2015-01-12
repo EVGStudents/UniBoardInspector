@@ -17,7 +17,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-                <welcome-file>dashboard.xhtml</welcome-file>
+                <welcome-file>top50results.xhtml</welcome-file>
 	</welcome-file-list>
 
 	<context-param>

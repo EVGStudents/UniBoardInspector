@@ -14,133 +14,108 @@ See terms of license at gnu.org.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"  
       xmlns:f="http://java.sun.com/jsf/core"  
-      xmlns:p="http://primefaces.org/ui">  
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <h:head>
         <link rel="stylesheet" href="resources/style.css" type="text/css"/>
-
         <title>UniBoard Inspector</title>
         <h:outputStylesheet name="style.css"/>
-    </h:head>       
+    </h:head>   
     <h:body>
         <p:layout fullPage="true">
-        <p:layoutUnit style="background-color: darkgray; text-align: center" position="north" resizable="true" size="50" minSize="120" maxSize="200">
-            <p:panel style="background-color: lightcyan">
-                <br />  <br />  
-                <h:outputText value="UniBoard Inspector" styleClass="heading"/> 
-                <br /> <br />  <br />
-            </p:panel>
-        </p:layoutUnit>
+            <p:layoutUnit  position="north" >
+                <h:panelGrid columns="2" style="background-color: white" >
+                    <h:column>
+                        <h:graphicImage value="resources/inspector.jpg" width="100" height="100"/> </h:column>
+                    <h:column>
+                        <br /> <br/>
+                       <h:form>
+                           <h:commandLink action="#{basicSearchBean.home()}" value="UniBoard Inspector" style="color:darkblue" styleClass="heading"/>
+                        </h:form>
+                    </h:column>
+                </h:panelGrid>
+            </p:layoutUnit>
 
-        <p:layoutUnit id="side" position="west" resizable="true"  size="300" minSize="300" maxSize="500">
-               <p:panel style="background-color: lightcyan">
-                <p:outputLabel value="Basic Search" styleClass="title" /> <br /> <br />
-                <h:form id="main1">
-                    <h:panelGrid columns="2">
-                        <h:outputText value="Section:" styleClass="info" />
-                        <p:selectOneMenu value="#{basicSearchBean.section}" >
-                            <f:selectItem itemLabel="Select Section" itemValue=""/>
-                            <f:selectItems value="#{populateBean.sections}" var="section"
-                                           itemLabel="#{section}" itemValue="#{section}" /> 
-                        </p:selectOneMenu>
-
-                        <h:outputText value="Group:" styleClass="info"/>
-                        <p:selectOneMenu value="#{basicSearchBean.group}">
-                            <f:selectItem itemLabel="Select Group" itemValue=""/>
-                            <f:selectItems value="#{populateBean.groups}" var="group"
-                                           itemLabel="#{group}" itemValue="#{group}" /> 
-                        </p:selectOneMenu>
-
-                        <h:outputText value="From Date:" styleClass="info" /> 
-                        <p:calendar size="15" value="#{basicSearchBean.dateFrom}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
-
-                        <h:outputText value="To Date:" styleClass="info"/> 
-                        <p:calendar size="15" value="#{basicSearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
-
-                        <h:outputText value="Limit:" styleClass="info"/> 
-                        <p:spinner min="1" size="12" value="#{basicSearchBean.limit}"/>
-                    </h:panelGrid>
-                    <br/> <br /> <br />
-                    <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{basicSearchBean.inspect}"/>
-                    <br/><br/> <br />
-                    <p:commandLink value="Advanced Search" styleClass="title" onclick="PF('advancedSearch').show();" />
-                    <br/><br/> <br />
-                    <p:commandLink value="Search By Public Key" styleClass="title" onclick="PF('publicKeySearch').show();" />
-                </h:form>
-                <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
-               </p:panel>
-        </p:layoutUnit>
-
-        <p:layoutUnit position="center">
-            <h:outputText value="50 Most Recent Posts" styleClass="info"/>
-            <h:form id="centerPane" >
-                <p:dataTable var="data" value="#{basicSearchBean.postDataList}">
-                    <p:column id="viewPost" width="100">
-                        <h:commandButton value="View Post" style="font-weight: bold" action="#{viewPostBean.postDetails(data)}"/>
-                    </p:column>
-                    <p:column id="sectionHeader" filterBy="#{data.section}" sortBy="#{data.section}">
-                        <f:facet name="header">
-                            <h:outputText value="Section" />
-                        </f:facet>
-                        <h:outputText value="#{data.section}" />
-                    </p:column>
-                    <p:column id="groupHeader" filterBy="#{data.group}" sortBy="#{data.group}">
-                        <f:facet name="header">
-                            <h:outputText value="Group" />
-                        </f:facet>
-                        <h:outputText value="#{data.group}" />
-                    </p:column>
-
-                    <p:column id="dateHeader" filterBy="#{data.date}" sortBy="#{data.date}">
-                        <f:facet name="header">
-                            <h:outputText value="Date" />
-                        </f:facet>
-                        <h:outputText value="#{data.date}" />
-                    </p:column>
-
-                    <p:column id="messageHeader" filterBy="#{data.message}" sortBy="#{data.message}">
-                        <f:facet name="header">
-                            <h:outputText value="Message" />
-                        </f:facet>
-                        <h:outputText value="#{data.message}" />
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </p:layoutUnit>
-        <p:layoutUnit position="south" resizable="true" size="20">
-        </p:layoutUnit>
+            <p:layoutUnit id="side" position="west" resizable="true"  size="300" minSize="300" maxSize="500">
+                <p:panel style="background-color: white">
+                    <p:outputLabel value="Basic Search" styleClass="searchType" /> <br /> <br />
+                    <h:form id="main1">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Section:" styleClass="searchFields" />
+                            <p:selectOneMenu value="#{basicSearchBean.section}" required="true">
+                                <f:selectItem itemLabel="Select Section" itemValue=""/>
+                                <f:selectItems value="#{populateBean.sections}" var="section"
+                                               itemLabel="#{section}" itemValue="#{section}" /> 
+                            </p:selectOneMenu>
+                            <h:outputText value="" />  <h:outputText value="" />
+                            
+                            <h:outputText value="Group:" styleClass="searchFields"/>
+                            <p:selectOneMenu value="#{basicSearchBean.group}">
+                                <f:selectItem itemLabel="Select Group" itemValue=""/>
+                                <f:selectItems value="#{populateBean.groups}" var="group"
+                                               itemLabel="#{group}" itemValue="#{group}" /> 
+                            </p:selectOneMenu>
+                            <h:outputText value="" />  <h:outputText value="" />
+                            
+                            <h:outputText value="From Date:" styleClass="searchFields" /> 
+                            <p:calendar size="15" value="#{basicSearchBean.dateFrom}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
+                            <h:outputText value="" />  <h:outputText value="" />
+                            
+                            <h:outputText value="To Date:" styleClass="searchFields"/> 
+                            <p:calendar size="15" value="#{basicSearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
+                            <h:outputText value="" />  <h:outputText value= "" />
+                            
+                            <h:outputText value="Limit:" styleClass="searchFields"/> 
+                            <p:spinner min="1" size="12" value="#{basicSearchBean.limit}"/>
+                        </h:panelGrid>
+                        <br/> <br /> <br />
+                        <h:commandButton value="Inspect" style="font-weight: bold" action="#{basicSearchBean.inspect()}"/>
+                        <br/><br/> <br />
+                        <p:commandLink value="Advanced Search" styleClass="searchType" onclick="PF('advancedSearch').show();" />
+                        <br/><br/> <br />
+                        <p:commandLink value="Search By Public Key" styleClass="searchType" onclick="PF('publicKeySearch').show();" />
+                    </h:form>
+                    <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
+                </p:panel>
+            </p:layoutUnit>
+            
+            <p:layoutUnit position="center">
+                <ui:insert name="content"/>
+            </p:layoutUnit>
         </p:layout>
-
         <!--******************************************** Dialog for Advanced Search ********************************** -->
-        <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="500" width="1000">
-            <h:form id="searchForm">
+        <p:dialog header="Advanced Search" widgetVar="advancedSearch" modal="true" height="530" width="1000">
+            <h:form id="advancedSearch">
                 <h:panelGrid columns="4">
-
                     <p:column>
-                        <h:outputText value="Section:" styleClass="info"/>
+                        <h:outputText value="Section:" styleClass="searchFields"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio binding="#{sectionScope}" value="#{advancedSearchBean.sectionScope}">
+                        <p:selectManyCheckbox columns="1">
                             <f:selectItem itemLabel="All" itemValue="All" />
-<!--                            <p:ajax update="sections" />-->
-                        </p:selectOneRadio>
+                               <!--<p:ajax update="sections" />-->
+                        </p:selectManyCheckbox>
                     </p:column>
                     <p:column>
-                        <p:selectManyCheckbox id="sections" value="#{advancedSearchBean.sections}" layout="grid" columns="3">
+                       
+                        <p:selectManyCheckbox id="sections" value="#{advancedSearchBean.sections}"  layout="grid" columns="3">
                             <f:selectItems value="#{populateBean.sections}" />
                         </p:selectManyCheckbox>
                     </p:column>
                     <p:column>
-                        <h:outputText id="section_error" value="Error message" />
+                        <h:outputText id="section_error" value="" />
                     </p:column>
-
+                  <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/>
+                 
                     <p:column>
-                        <h:outputText value="Group:" styleClass="info"/>
+                        <h:outputText value="Group:" styleClass="searchFields"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneRadio value="#{advancedSearchBean.groupScope}">
+                        <p:selectManyCheckbox columns="1" >
                             <f:selectItem itemLabel="All" itemValue="All" />
-                        </p:selectOneRadio>
+                               <!--<p:ajax update="sections" />-->
+                        </p:selectManyCheckbox>
                     </p:column>
                     <p:column>
                         <p:selectManyCheckbox value="#{advancedSearchBean.groups}" layout="grid" columns="3">
@@ -148,11 +123,11 @@ See terms of license at gnu.org.
                         </p:selectManyCheckbox>
                     </p:column>
                     <p:column>
-                        <h:outputText id="group_error" value="Error message" />
+                        <h:outputText id="group_error" value="" />
                     </p:column>
-
+                     <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/>
                     <p:column>
-                        <h:outputText value="Date:" styleClass="info"/> 
+                        <h:outputText value="Date:" styleClass="searchFields"/> 
                     </p:column>
                     <p:column>
                         <h:outputText value="From" style="text-align: center" />
@@ -161,24 +136,25 @@ See terms of license at gnu.org.
                         <p:calendar size="15" value="#{advancedSearchBean.dateFrom}" pattern="dd/MM/yyyy HH:mm" navigator="true"/>
                     </p:column>
                     <p:column>
-                        <h:outputText id="date_error1" value="Error message" />
+                        <h:outputText id="date_error1" value="" />
                     </p:column>
-
+                   <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/>
                     <p:column>
                         <h:outputText  value=" " />
                     </p:column>
                     <p:column>
-                        <h:outputText value="Before"  />
+                        <h:outputText value="To"  />
                     </p:column>
                     <p:column>
                         <p:calendar size="15" value="#{advancedSearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true"/>
                     </p:column>
                     <p:column>
-                        <h:outputText id="date_error2" value="Error message" />
+                        <h:outputText id="date_error2" value="" />
                     </p:column>
-
+                   <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/>
+                   
                     <p:column>
-                        <h:outputText value="Rank:" styleClass="info"/>  
+                        <h:outputText value="Rank:" styleClass="searchFields"/>  
                     </p:column>
                     <p:column>
                         <p:selectOneRadio binding="#{rankValue}" layout="grid" columns="1" value="#{advancedSearchBean.rankScope}">
@@ -194,11 +170,11 @@ See terms of license at gnu.org.
                         <p:spinner value="#{advancedSearchBean.rank2}" id="rank2" disabled="#{rankValue.value != 'Between'}" min="1" size="12"/>
                     </p:column>
                     <p:column>
-                        <h:outputText id="rank_error1" value="Error message" />
+                        <h:outputText id="rank_error1" value="" />
                     </p:column>
-
+                    <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/> <p:outputLabel value=" "/>
                     <p:column>
-                        <h:outputText value="Limit:" styleClass="info"/>
+                        <h:outputText value="Limit:" styleClass="searchFields"/>
                     </p:column>
                     <p:column>
                         <p:spinner min="1" size="12" value="#{advancedSearchBean.limit}"/>
@@ -207,7 +183,10 @@ See terms of license at gnu.org.
                         <p:outputLabel value=" "/>
                     </p:column>
                 </h:panelGrid>
-                <br/> <br /> <br />
+               <br />
+                        <h:outputText value="Copy and paste your public key in the text area below:" styleClass="searchFields"/> <br /> <br />
+                        <h:inputTextarea cols="60" rows="5" value="#{advancedSearchBean.publicKey}" />
+                        <br/> <br /> <br />
                 <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{advancedSearchBean.inspect()}"/>
             </h:form>
         </p:dialog> 
@@ -217,18 +196,18 @@ See terms of license at gnu.org.
         <p:dialog header="Search by Public Key" widgetVar="publicKeySearch" modal="true" height="500" width="500">
             <h:form id="PKSearch">
                 <br /> <br />
-                <h:outputText value="Copy and paste your public key in the text area below:" styleClass="info"/> 
+                <h:outputText value="Copy and paste your public key in the text area below:" styleClass="searchFields"/> 
                 <br /> <br />
                 <h:inputTextarea cols="60" rows="10" value="#{publicKeySearchBean.publicKey}"/>
                 <br/> <br />
                 <h:panelGrid columns="2">
-                    <h:outputText value="From Date:" styleClass="info" /> 
+                    <h:outputText value="From Date:" styleClass="searchFields" /> 
                     <p:calendar size="15" value="#{publicKeySearchBean.dateFrom}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
 
-                    <h:outputText value="To Date:" styleClass="info"/> 
+                    <h:outputText value="To Date:" styleClass="searchFields"/> 
                     <p:calendar size="15" value="#{publicKeySearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true" />
 
-                    <h:outputText value="Limit:" styleClass="info"/> 
+                    <h:outputText value="Limit:" styleClass="searchFields"/> 
                     <p:spinner min="1" size="12" value="#{publicKeySearchBean.limit}"/>
                 </h:panelGrid>
                     <br/> <br /> <br />
@@ -238,19 +217,19 @@ See terms of license at gnu.org.
         
         <!-- *********************************** Dialog for View Post *********************************  -->
 
-        <p:dialog header="Post Details" widgetVar="viewPost" height="550" width="800">
+        <p:dialog header="Post Details" widgetVar="viewPost" height="550" width="1000">
             <h:form id="postForm">
                 <p:growl id="msgs" showDetail="true" />
                 <h:panelGrid columns="2" >
-                    <h:outputText value="Section:" styleClass="info"/> 
+                    <h:outputText value="Section:" styleClass="searchFields"/> 
                     <h:outputText value="#{viewPostBean.section}" />
-                    <h:outputText value="Group:" styleClass="info"/> 
+                    <h:outputText value="Group:" styleClass="searchFields"/> 
                     <h:outputText value="#{viewPostBean.group}"/>
-                    <h:outputText value="Rank:" styleClass="info"/> 
+                    <h:outputText value="Rank:" styleClass="searchFields"/> 
                     <h:outputText value="#{viewPostBean.rank}"/>
-                    <h:outputText value="Timestamp:" styleClass="info"/> 
+                    <h:outputText value="Timestamp:" styleClass="searchFields"/> 
                     <h:outputText value="#{viewPostBean.timeStamp}"/>
-                    <h:outputText value="Message:" styleClass="info"/>  
+                    <h:outputText value="Message:" styleClass="searchFields"/>  
                     <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
                         <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
                         <h:panelGrid columns="1" cellpadding="5">
@@ -258,7 +237,7 @@ See terms of license at gnu.org.
                             </h:outputText>
                         </h:panelGrid>
                     </p:fieldset>
-                    <h:outputText value="Signature:" styleClass="info"/>  
+                    <h:outputText value="Signature:" styleClass="searchFields"/>  
                     <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
                         <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
                         <h:panelGrid columns="1" cellpadding="5">
@@ -266,7 +245,7 @@ See terms of license at gnu.org.
                             </h:outputText>
                         </h:panelGrid>
                     </p:fieldset>
-                    <h:outputText value="Public Key:" styleClass="info"/>  
+                    <h:outputText value="Public Key:" styleClass="searchFields"/>  
                     <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
                         <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
                         <h:panelGrid columns="1" cellpadding="5">
@@ -274,7 +253,7 @@ See terms of license at gnu.org.
                             </h:outputText>
                         </h:panelGrid>
                     </p:fieldset>
-                    <h:outputText value="Board Signature:" styleClass="info"/>  
+                    <h:outputText value="Board Signature:" styleClass="searchFields"/>  
                     <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
                         <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
                         <h:panelGrid columns="1" cellpadding="5">
@@ -282,30 +261,6 @@ See terms of license at gnu.org.
                             </h:outputText>
                         </h:panelGrid>
                     </p:fieldset>
-                    <h:outputText value="Hash:" styleClass="info"/>  
-                    <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
-                        <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
-                        <h:panelGrid columns="1" cellpadding="5">
-                            <h:outputText value="d41d8cd98f00b204e9800998ecf8427 
-                                          75cdbfeb70a06d42210938da88c42991
-                                          6e0b7a1676ec0279139b3f39bd65e41a  
-                                          c74c812e4d2839fa9acf0aa0c915e022">                  
-                            </h:outputText>
-                        </h:panelGrid>
-                    </p:fieldset>
-                    <h:outputText value="Confirmation:" styleClass="info"/>  
-                    <p:fieldset legend="" toggleable="true" toggleSpeed="500" collapsed="false">
-                        <p:ajax event="toggle" listener="#{fieldsetView.handleToggle}" update="msgs" />
-                        <h:panelGrid columns="1" cellpadding="5">
-                            <h:outputText value="-------BEGIN SIGNATURE------ 
-                                          IQB1AwUBMVSiA5QYCuMfgNYjAQFAKgL/ZkBfbeNEsbthba4BlrcnjaqbcKgNv+ 
-                                          a5kr4537y8RCd+RHm75yYh5xxA1ojELwNhhb7cltrp2V7LlOnAelws4S87UX80c 
-                                          LBtBcN6AACf11qymC2h+Rb2j5SU+rmXWru+=QFMx 
-                                          ------END SIGNATURE------">                  
-                            </h:outputText>
-                        </h:panelGrid>
-                    </p:fieldset>
-
                 </h:panelGrid>  
             </h:form>
         </p:dialog>

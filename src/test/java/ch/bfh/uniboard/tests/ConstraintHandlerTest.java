@@ -1,3 +1,5 @@
+package ch.bfh.uniboard.tests;
+
 /*
  * Copyright (c) 2013 Berner Fachhochschule, Switzerland.
  * Bern University of Applied Sciences, Engineering and Information Technology,
@@ -9,7 +11,6 @@
  * Distributable under GPL license.
  * See terms of license at gnu.org.
  */
-package ch.bfh.uniboard.tests;
 
 import ch.bfh.uniboard.client.ConstraintHandler;
 import ch.bfh.uniboard.data.ConstraintDTO;
@@ -24,6 +25,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -31,6 +33,10 @@ import org.junit.Test;
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 public class ConstraintHandlerTest {
+
+    @Before
+    public void setUp() {
+    }
 
     @Test
     public void testHandleSectionConstraint() {
@@ -40,12 +46,12 @@ public class ConstraintHandlerTest {
         List<String> emptyList = null;
         assertNull(ConstraintHandler.handleSectionConstraint(emptyList));
         List<String> sections = new ArrayList<>();
-        sections.add("HESB");
-        sections.add("EPFL");
+        sections.add("BFH");
+        sections.add("Unibe");
         ConstraintDTO listConstraint = ConstraintHandler.handleSectionConstraint(sections);
         assertNotNull(listConstraint);
-    }
 
+    }
     @Test
     public void testHandleGroupConstraint() {
         assertNull(ConstraintHandler.handleGroupConstraint(""));
@@ -54,8 +60,8 @@ public class ConstraintHandlerTest {
         List<String> emptyList = null;
         assertNull(ConstraintHandler.handleGroupConstraint(emptyList));
         List<String> groups = new ArrayList<>();
-        groups.add("student");
-        groups.add("certgen");
+        groups.add("electiondata");
+        groups.add("voters");
         ConstraintDTO listConstraint = ConstraintHandler.handleSectionConstraint(groups);
         assertNotNull(listConstraint);
     }
@@ -83,5 +89,4 @@ public class ConstraintHandlerTest {
         ConstraintDTO constraint = ConstraintHandler.handleToDateTimeConstraint(xmlCalendar);
         assertNotNull(constraint);
     }
-
 }

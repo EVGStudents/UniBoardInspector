@@ -13,29 +13,32 @@ package ch.bfh.uniboard.presentation;
 
 import ch.bfh.uniboard.client.UniBoardClient;
 import ch.bfh.uniboard.data.DefaultValues;
-import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
 import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.datatype.DatatypeConfigurationException;
 
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-@ManagedBean
+@Named
 @SessionScoped
 public class BasicSearchBean implements Serializable{
+
+    private static final Logger logger = Logger.getLogger(BasicSearchBean.class.getName());
 
     private String section = "";
 
@@ -56,6 +59,8 @@ public class BasicSearchBean implements Serializable{
     private List<PostData> searchResults = new ArrayList<>();
 
     private List<String> messageKeys = new ArrayList<>();
+
+    private boolean hasGroup=true;
 
     @PostConstruct
     public void init() {
@@ -142,8 +147,12 @@ public class BasicSearchBean implements Serializable{
         return messageKeys.size();
     }
 
-    public String home() {
-        return "dashboard";
+    public boolean isHasGroup() {
+        return hasGroup;
+    }
+
+    public void setHasGroup(boolean hasGroup) {
+        this.hasGroup = hasGroup;
     }
 
     public void clearDate(String name){
@@ -155,43 +164,63 @@ public class BasicSearchBean implements Serializable{
        }
     }
 
-    public String inspect() {
+    public String homeBasicSearch() {
+        logger.log(Level.INFO, "Redirecting to homepage!");
+        
+        postDataList = UniBoardClient.getTop50MostRecentPosts();
+        return "top50results";
+    }
+
+    public void home() {
+        logger.log(Level.INFO, "Reloading homepage!");
+
+        postDataList = UniBoardClient.getTop50MostRecentPosts();
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
-            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-            if (searchResults != null && !searchResults.isEmpty()) {
-                PostData data = searchResults.get(0);
-                messageKeys = data.getMessageKeys();
-                messageKeys.remove(Keys.MESSAGE_ID);
-            }
-            if (!group.isEmpty()) {
-                return "basicSearchResults";
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (IOException exception) {
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");
+        }
+    }
+    public String inspect() {
+        logger.log(Level.INFO, "Executing inpect() method from homepage!");
+
+        searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+        if (searchResults != null && !searchResults.isEmpty()) {
+            PostData data = searchResults.get(0);
+            messageKeys = data.getMessageKeys();
+            if (group.isEmpty()) {
+                hasGroup = false;
             } else {
-                postDataList=searchResults;
-                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+                hasGroup = true;
             }
-        } catch (DatatypeConfigurationException exception) {
-            System.out.println("Data type configuration error!");
-        } catch (Exception exception) {
-            MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
+            return "basicSearchResults";
         }
         return null;
     }
 
     public void inspectBasicSearch() {
+        logger.log(Level.INFO, "Executing inpect() method from Basic Search results page!");
+
+        searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+
+        if (searchResults != null && !searchResults.isEmpty()) {
+            PostData data = searchResults.get(0);
+            messageKeys = data.getMessageKeys();
+            // messageKeys.remove(Keys.MESSAGE_ID);
+        }
+        if (group.isEmpty()) {
+            hasGroup = false;
+        } else {
+            hasGroup = true;
+        }
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
-            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-            if (searchResults != null && !searchResults.isEmpty()) {
-                PostData data = searchResults.get(0);
-                messageKeys = data.getMessageKeys();
-                messageKeys.remove(Keys.MESSAGE_ID);
-            }
-            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-        } catch (DatatypeConfigurationException exception) {
-            System.out.println("Data type configuration error!");
-        } catch (Exception exception) {
-            MessageFactory.error("ch.bfh.UniBoard.No_SECTION_FOUND");
+        } catch (IOException exception) {
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");
         }
     }
 }
