@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2013 Berner Fachhochschule, Switzerland.
+Bern University of Applied Sciences, Engineering and Information Technology,
+Research Institute for Security in the Information Society, E-Voting Group,
+Biel, Switzerland.
+
+Project UniVote.
+
+Distributable under GPL license.
+See terms of license at gnu.org.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <link rel="stylesheet" href="resources/style.css" type="text/css"/>
+
+        <title>UniBoard Inspector</title>
+        <h:outputStylesheet name="style.css"/>
+    </h:head>  
+    <body>
+       <p:layout fullPage="true" >
+            <p:layoutUnit  position="north" >
+                <h:panelGrid columns="2" style="background-color: white" >
+                    <h:column>
+                        <h:graphicImage value="resources/inspector.jpg" width="115" height="100"/> </h:column>
+                    <h:column>
+                        <br /> <br/>
+                        <h:form>
+                        <h:commandLink action="top50results" value="UniBoard Inspector" style="color:darkblue" styleClass="heading"/>
+                        </h:form>
+                    </h:column>
+                </h:panelGrid>
+            </p:layoutUnit>
+           
+           <p:layoutUnit position="west" resizable="true"  size="300" minSize="300" maxSize="500">
+                <p:panel style="background-color: white">
+                    <p:outputLabel value="Basic Search" styleClass="searchType" /> <br /> <br />
+                    <h:form id="main">
+                        <h:panelGrid columns="2">
+                           <h:outputText value="Section:" styleClass="searchFields"/>
+                            <p:selectOneMenu value="#{basicSearchBean.section}">
+                                <f:selectItem itemLabel="Select Section" itemValue=""/>
+                                <f:selectItems value="#{populateBean.sections}" var="section"
+   			              itemLabel="#{section}" itemValue="#{section}" /> 
+                            </p:selectOneMenu>
+                           <h:outputText value="" />  <h:outputText value="" />
+                            
+                            <h:outputText value="Group:" styleClass="searchFields"/>
+                            <p:selectOneMenu value="#{basicSearchBean.group}">
+                                <f:selectItem itemLabel="Select Group" itemValue=""/>
+                                <f:selectItems value="#{populateBean.groups}" var="group"
+   			            itemLabel="#{group}" itemValue="#{group}" /> 
+                            </p:selectOneMenu>
+                            <h:outputText value="" />  <h:outputText value="" />
+
+                            <h:outputText value="From Date:" styleClass="searchFields" /> 
+                            <p:calendar size="15" value="#{basicSearchBean.dateFrom}" pattern="dd/MM/yyyy HH:mm" navigator="true"/>
+                            <h:outputText value="" />  <h:outputText value="" />
+                            <h:outputText value="" />  <h:outputText value="" />
+
+                            <h:outputText value="To   Date:" styleClass="searchFields"/> 
+                            <p:calendar size="15" value="#{basicSearchBean.dateTo}" pattern="dd/MM/yyyy HH:mm" navigator="true"/>
+                            <h:outputText value="" />  <h:outputText value="" />
+
+                            <h:outputText value="Limit:" styleClass="searchFields"/>
+                            <p:spinner min="1" size="12" value="#{basicSearchBean.limit}"/>
+                        </h:panelGrid>
+                        <br /> <br /> <br />
+                        <h:commandButton value="Inspect" style="font-weight: bold" action="#{basicSearchBean.inspect}"/>
+                    </h:form>
+                    <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
+                </p:panel>
+            </p:layoutUnit>
+           
+           <p:layoutUnit position="center">
+                <h:outputText value="Results for Search by Public Key" style="font-weight: bold; font-size: larger; color: black;"/>
+                <h:form>
+                    <p:dataTable var="data" value="#{publicKeySearchBean.searchResults}">
+                        <p:column id="viewPost" width="100">
+                            <h:commandButton value="View Post" action="#{viewPostBean.postDetails(data)}"/>
+                        </p:column>
+                        <p:column id="sectionHeader" filterBy="#{data.section}" sortBy="#{data.section}">
+                            <f:facet name="header">
+                                <h:outputText value="Section" />
+                            </f:facet>
+                            <h:outputText value="#{data.section}" />
+                        </p:column>
+                        <p:column id="groupHeader" filterBy="#{data.group}" sortBy="#{data.group}">
+                            <f:facet name="header">
+                                <h:outputText value="Group" />
+                            </f:facet>
+                            <h:outputText value="#{data.group}" />
+                        </p:column>
+
+                        <p:column id="dateHeader" filterBy="#{data.date}" sortBy="#{data.date}">
+                            <f:facet name="header">
+                                <h:outputText value="Date" />
+                            </f:facet>
+                            <h:outputText value="#{data.date}" />
+                        </p:column>
+                        
+                         <p:column id="rankHeader" filterBy="#{data.rank}" sortBy="#{data.rank}">
+                            <f:facet name="header">
+                                <h:outputText value="Rank" />
+                            </f:facet>
+                             <h:outputText value="#{data.rank}" />
+                        </p:column>
+
+                        <p:column id="messageHeader" filterBy="#{data.message}" sortBy="#{data.message}">
+                            <f:facet name="header">
+                                <h:outputText value="Message" />
+                            </f:facet>
+                            <h:outputText value="#{data.message}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" resizable="true" size="20">
+            </p:layoutUnit>
+           
+        </p:layout>
+    </body>
+</html>
