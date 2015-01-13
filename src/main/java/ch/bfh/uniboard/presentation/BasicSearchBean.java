@@ -166,7 +166,7 @@ public class BasicSearchBean implements Serializable{
 
     public String homeBasicSearch() {
         logger.log(Level.INFO, "Redirecting to homepage!");
-        
+
         postDataList = UniBoardClient.getTop50MostRecentPosts();
         return "top50results";
     }
@@ -184,20 +184,20 @@ public class BasicSearchBean implements Serializable{
         }
     }
     public String inspect() {
-        logger.log(Level.INFO, "Executing inpect() method from homepage!");
-
-        searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-        if (searchResults != null && !searchResults.isEmpty()) {
-            PostData data = searchResults.get(0);
-            messageKeys = data.getMessageKeys();
-            if (group.isEmpty()) {
-                hasGroup = false;
-            } else {
-                hasGroup = true;
+        logger.log(Level.INFO, "Executing inpect() method from homepage");
+        if(section!=null && !section.isEmpty()){
+            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+            if (searchResults != null && !searchResults.isEmpty()) {
+                PostData data = searchResults.get(0);
+                messageKeys = data.getMessageKeys();
+                if (group.isEmpty()) {
+                    hasGroup = false;
+                } else {
+                    hasGroup = true;
+                }
             }
-            return "basicSearchResults";
         }
-        return null;
+      return "basicSearchResults";
     }
 
     public void inspectBasicSearch() {
@@ -208,7 +208,8 @@ public class BasicSearchBean implements Serializable{
         if (searchResults != null && !searchResults.isEmpty()) {
             PostData data = searchResults.get(0);
             messageKeys = data.getMessageKeys();
-            // messageKeys.remove(Keys.MESSAGE_ID);
+        } else {
+            messageKeys = new ArrayList<>();
         }
         if (group.isEmpty()) {
             hasGroup = false;

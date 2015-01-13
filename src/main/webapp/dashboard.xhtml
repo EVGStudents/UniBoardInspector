@@ -43,7 +43,7 @@ See terms of license at gnu.org.
                     <h:form id="main1">
                         <h:panelGrid columns="2">
                             <h:outputText value="Section:" styleClass="searchFields" />
-                            <p:selectOneMenu value="#{basicSearchBean.section}" required="true">
+                            <p:selectOneMenu value="#{basicSearchBean.section}">
                                 <f:selectItem itemLabel="Select Section" itemValue=""/>
                                 <f:selectItems value="#{populateBean.sections}" var="section"
                                                itemLabel="#{section}" itemValue="#{section}" /> 
@@ -187,7 +187,7 @@ See terms of license at gnu.org.
                         <h:outputText value="Copy and paste your public key in the text area below:" styleClass="searchFields"/> <br /> <br />
                         <h:inputTextarea cols="60" rows="5" value="#{advancedSearchBean.publicKey}" />
                         <br/> <br /> <br />
-                <p:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{advancedSearchBean.inspect()}"/>
+                <h:commandButton value="Inspect" styleClass="p_inspectButton" id="inspectButton" action="#{advancedSearchBean.inspect()}"/>
             </h:form>
         </p:dialog> 
 

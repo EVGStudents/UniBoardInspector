@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -30,6 +32,8 @@ import javax.inject.Named;
 @Named
 @SessionScoped
 public class PublicKeySearchBean implements Serializable{
+
+    private static final Logger logger = Logger.getLogger(PublicKeySearchBean.class.getName());
 
     private String publicKey;
 
@@ -82,8 +86,10 @@ public class PublicKeySearchBean implements Serializable{
     }
 
     public String inspect(){
-
+            logger.log(Level.INFO,"Executing inpect() method from Search by Public Key page");
+            if(publicKey!=null && !publicKey.isEmpty()){
             searchResults=SearchService.getPublickeySearchResults(publicKey, dateFrom, dateTo, limit);
+            }
             return "publicKeySearchResults";
     }
 }

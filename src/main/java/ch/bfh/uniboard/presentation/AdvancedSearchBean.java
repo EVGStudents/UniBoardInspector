@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -142,11 +143,13 @@ public class AdvancedSearchBean implements Serializable{
     }
 
     public String inspect() {
+            logger.log(Level.INFO, "Executing inpect() method from Advanced Search page");
 
-            System.out.println("********************Rank scope:**************************"+rankScope);
             List<String> groupList = Arrays.asList(groups);
             List<String> sectionList = Arrays.asList(sections);
-            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2, publicKey);
+            if (sectionList != null && !sectionList.isEmpty()) {
+            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit, rankScope, rank1, rank2, publicKey);
+        }
             return "advancedSearchResults";
     }
 
