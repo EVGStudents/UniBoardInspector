@@ -43,7 +43,7 @@ See terms of license at gnu.org.
                     <h:form>
                         <h:panelGrid columns="2">
                             <h:outputText value="Section:" styleClass="searchFields" />
-                            <p:selectOneMenu value="#{basicSearchBean.section}" required="true">
+                            <p:selectOneMenu value="#{basicSearchBean.section}">
                                 <f:selectItem itemLabel="Select Section" itemValue=""/>
                                 <f:selectItems value="#{populateBean.sections}" var="section"
                                                itemLabel="#{section}" itemValue="#{section}" /> 
@@ -72,7 +72,7 @@ See terms of license at gnu.org.
                         <br/> <br /> <br />
                         <h:commandButton value="Inspect" style="font-weight: bold" action="#{basicSearchBean.inspectBasicSearch()}"/>
                     </h:form>
-                    <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> 
+                    <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
                 </p:panel>
             </p:layoutUnit>
             

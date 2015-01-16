@@ -51,6 +51,7 @@ td {
         font-weight: bold;
 }
 .error {
-	background-color: yellow;
+	color: red; 
+        font-weight: bold;
 }
 

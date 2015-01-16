@@ -22,7 +22,6 @@ import ch.bfh.uniboard.data.InDTO;
 import ch.bfh.uniboard.data.IntegerValueDTO;
 import ch.bfh.uniboard.data.LessDTO;
 import ch.bfh.uniboard.data.LessEqualDTO;
-import ch.bfh.uniboard.data.MessageIdentifierDTO;
 import ch.bfh.uniboard.data.StringValueDTO;
 import ch.bfh.uniboard.data.ValueDTO;
 import java.util.ArrayList;
@@ -39,6 +38,7 @@ public class ConstraintHandler {
     private static final Logger logger = Logger.getLogger(ConstraintHandler.class.getName());
 
     public static ConstraintDTO handleSectionConstraint(String section) {
+        logger.info("Constructing constraint for section");
 
         if (section != null && !section.isEmpty()) {
             AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("section");
@@ -50,6 +50,7 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleGroupConstraint(String group) {
+        logger.info("Constructing constraint for group");
 
         if (group != null && !group.isEmpty()) {
             AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("group");
@@ -61,6 +62,7 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleFromDateTimeConstraint(XMLGregorianCalendar fromDate) {
+        logger.info("Constructing constraint for date");
 
         if (fromDate != null) {
             BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("timestamp");
@@ -72,6 +74,7 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleToDateTimeConstraint(XMLGregorianCalendar toDate) {
+        logger.info("Constructing constraint for date");
 
         if (toDate != null) {
             BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("timestamp");
@@ -83,6 +86,7 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleSectionConstraint(List<String> sections) {
+        logger.info("Constructing constraint for a list of sections with InDTO");
 
         if (sections != null && !sections.isEmpty()) {
             List<ValueDTO> values = new ArrayList<>();
@@ -99,12 +103,13 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleGroupConstraint(List<String> groups) {
+        logger.info("Constructing constraint for a list of groups with InDTO");
 
         if (groups != null && !groups.isEmpty()) {
             List<ValueDTO> values = new ArrayList<>();
 
-            for (int i = 0; i < groups.size(); i++) {
-                ValueDTO value = new StringValueDTO(groups.get(i));
+            for (String group : groups) {
+                ValueDTO value = new StringValueDTO(group);
                 values.add(value);
             }
             AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("group");
@@ -116,6 +121,8 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleRankConstraintEqual(int rank) {
+        logger.info("Constructing constraint for rank");
+
         if (rank > 0) {
             BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
             ValueDTO rankValue = new IntegerValueDTO(rank);
@@ -126,6 +133,8 @@ public class ConstraintHandler {
     }
 
     public static ConstraintDTO handleRankConstraintLessThan(int rank) {
+        logger.info("Constructing constraint for rank");
+
         if (rank > 0 ) {
             BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
             ValueDTO rankValue = new IntegerValueDTO(rank);
@@ -135,16 +144,19 @@ public class ConstraintHandler {
         return null;
     }
      public static ConstraintDTO handleRankConstraintMoreThan(int rank) {
-        if (rank > 0 ) {
-            BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
-            ValueDTO rankValue = new IntegerValueDTO(rank);
-            ConstraintDTO constraint = new GreaterDTO(betaIdentifier, rankValue);
-            return constraint;
-        }
+         logger.info("Constructing constraint for rank");
+
+         if (rank > 0) {
+             BetaIdentifierDTO betaIdentifier = IdentifierDTOHelper.getBetaIdentifier("rank");
+             ValueDTO rankValue = new IntegerValueDTO(rank);
+             ConstraintDTO constraint = new GreaterDTO(betaIdentifier, rankValue);
+             return constraint;
+         }
         return null;
     }
 
      public static ConstraintDTO handlePublicKeyConstraint(String publicKey){
+         logger.info("Constructing constraint for public key");
 
          if (publicKey != null && !publicKey.isEmpty()) {
             AlphaIdentifierDTO alphaIdentifier = IdentifierDTOHelper.getAlphaIdentifier("key");
@@ -154,10 +166,4 @@ public class ConstraintHandler {
         }
         return null;
      }
-    public static ConstraintDTO handleMessageConstraintMoreThan(String message) {
-
-        MessageIdentifierDTO messageIdentifier = IdentifierDTOHelper.getMessageIdentifier(message);
-        return null;
-    }
-
 }

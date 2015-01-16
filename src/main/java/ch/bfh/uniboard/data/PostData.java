@@ -31,6 +31,7 @@ import org.primefaces.json.JSONException;
  */
 @XmlRootElement
 public class PostData implements Serializable{
+    private static final Logger logger = Logger.getLogger(PostData.class.getName());
 
     private String message;
     private String section;
@@ -145,61 +146,65 @@ public class PostData implements Serializable{
     }
 
     private void extractValues(PostDTO post) {
+        logger.log(Level.INFO, "Extracting values from PostDTO");
+        if (post != null) {
+            this.message = digestMessage(post.getMessage());
+            AttributesDTO alphaAttributes = post.getAlpha();
+            List<AttributeDTO> alphaAttributeList = alphaAttributes.getAttribute();
+            for (AttributeDTO alphaAttribute : alphaAttributeList) {
+                String key = alphaAttribute.getKey();
+                ValueDTO value = alphaAttribute.getValue();
+                if (key.equals(Keys.SECTION)) {
+                    this.section = ((StringValueDTO) value).getValue();
+                }
+                if (key.equals(Keys.GROUP)) {
+                    this.group = ((StringValueDTO) value).getValue();
+                }
+                if (key.equals(Keys.SIGNATURE)) {
+                    this.signature = ((StringValueDTO) value).getValue();
+                }
+                if (key.equals(Keys.PUBLIC_KEY)) {
+                    this.publicKey = ((StringValueDTO) value).getValue();
+                }
+            }
 
-        try {
-            this.messagePayload = MessageHandler.getParametersFromPayload(post.message);
-            this.messageKeys = new ArrayList<>(messagePayload.keySet());
-            this.messageSize = messageKeys.size();
-        } catch (JSONException ex) {
-            Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA");
-            byte[] msg=md.digest(post.getMessage());
-            md.update(msg);
-            this.message=msg.toString();
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(PostData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        AttributesDTO alphaAttributes = post.getAlpha();
-        List<AttributeDTO> attributeList = alphaAttributes.getAttribute();
-        for (int i = 0; i < attributeList.size(); i++) {
-            String key = attributeList.get(i).getKey();
-            ValueDTO value = attributeList.get(i).getValue();
-            if (key.equals(Keys.SECTION)) {
-                this.section = ((StringValueDTO) value).getValue();
-            }
-            if (key.equals(Keys.GROUP)) {
-                this.group = ((StringValueDTO) value).getValue();
-            }
-            if (key.equals(Keys.SIGNATURE)) {
-                this.signature = ((StringValueDTO) value).getValue();
-            }
-            if (key.equals(Keys.PUBLIC_KEY)) {
-                this.publicKey = ((StringValueDTO) value).getValue();
-            }
-        }
-
-        AttributesDTO betaAttributes = post.getBeta();
-        List<AttributeDTO> betaAttributeList = betaAttributes.getAttribute();
-        for (int i = 0; i < betaAttributeList.size(); i++) {
-            String key = betaAttributeList.get(i).getKey();
-            ValueDTO value = betaAttributeList.get(i).getValue();
-            if (key.equals(Keys.TIMESTAMP)) {
-                XMLGregorianCalendar timestamp = ((DateValueDTO) value).getValue();
-                this.date = formatDate(timestamp);
-            }
-            if (key.equals(Keys.RANK)) {
-                this.rank = ((IntegerValueDTO) value).getValue();
-            }
-            if (key.equalsIgnoreCase(Keys.BOARD_SIGNATURE)) {
-                this.boardSignature = ((StringValueDTO) value).getValue();
+            AttributesDTO betaAttributes = post.getBeta();
+            List<AttributeDTO> betaAttributeList = betaAttributes.getAttribute();
+            for (AttributeDTO betaAttribute : betaAttributeList) {
+                String key = betaAttribute.getKey();
+                ValueDTO value = betaAttribute.getValue();
+                if (key.equals(Keys.TIMESTAMP)) {
+                    XMLGregorianCalendar timestamp = ((DateValueDTO) value).getValue();
+                    this.date = formatDate(timestamp);
+                }
+                if (key.equals(Keys.RANK)) {
+                    this.rank = ((IntegerValueDTO) value).getValue();
+                }
+                if (key.equalsIgnoreCase(Keys.BOARD_SIGNATURE)) {
+                    this.boardSignature = ((StringValueDTO) value).getValue();
+                }
             }
         }
     }
 
+    private String digestMessage(byte[] message){
+        logger.log(Level.INFO, "Digesting message of PostDTO");
+        try {
+            this.messagePayload = MessageHandler.getParametersFromPayload(message);
+            this.messageKeys = new ArrayList<>(messagePayload.keySet());
+            this.messageSize = messageKeys.size();
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.update(message);
+            byte[] msg=md.digest(message);
+            return msg.toString();
+        } catch (JSONException | NoSuchAlgorithmException exception) {
+           logger.log(Level.WARNING, exception.getMessage());
+           return null;
+        }
+    }
+
     private String formatDate(XMLGregorianCalendar timestamp) {
+        logger.log(Level.INFO, "Formatting date");
 
         int day = timestamp.getDay();
         String d = "" + day;

@@ -27,7 +27,6 @@ public class Groups {
  public static String ELECTION_RESULT="ElectionResult";
 
     public static List<String> getAllGroups() {
-
         List<String> groups = new ArrayList<>();
         groups.add(VOTERS);
         groups.add(ELECTION_DATA);

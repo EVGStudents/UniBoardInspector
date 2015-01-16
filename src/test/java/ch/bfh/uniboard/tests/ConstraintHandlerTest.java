@@ -25,7 +25,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -34,9 +33,6 @@ import org.junit.Test;
  */
 public class ConstraintHandlerTest {
 
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void testHandleSectionConstraint() {

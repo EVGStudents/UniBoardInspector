@@ -15,7 +15,6 @@ package ch.bfh.uniboard.presentation;
 import ch.bfh.uniboard.data.Groups;
 import ch.bfh.uniboard.data.Sections;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -29,9 +28,9 @@ import javax.inject.Named;
 @SessionScoped
 public class PopulateBean implements Serializable{
 
-    private List<String> sections = new ArrayList<String>();
+    private List<String> sections;
 
-    private List<String> groups = new ArrayList<String>();
+    private List<String> groups;
 
     @PostConstruct
     public void init() {
@@ -54,5 +53,4 @@ public class PopulateBean implements Serializable{
     public void setGroups(List<String> groups) {
         this.groups = groups;
     }
-
 }

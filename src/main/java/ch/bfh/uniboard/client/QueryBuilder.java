@@ -59,7 +59,7 @@ public class QueryBuilder {
 
     public QueryDTO buildQuery(String section, String group, XMLGregorianCalendar fromDate, XMLGregorianCalendar toDate, int limit) {
 
-        logger.info("Build query for basic search");
+        logger.info("Build query for Basic Search");
         if (section == null || section.isEmpty()) {
             return null;
         }
@@ -93,7 +93,6 @@ public class QueryBuilder {
 
     public QueryDTO buildQuery(List<String> sections, List<String> groups, XMLGregorianCalendar fromDate,
             XMLGregorianCalendar toDate, int limit, String rankScope, int rank1, int rank2, String publicKey){
-
         logger.info("Build query for advancedSearch");
 
         if (sections == null || sections.isEmpty()) {

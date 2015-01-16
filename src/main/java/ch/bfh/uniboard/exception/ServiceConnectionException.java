@@ -12,10 +12,12 @@
 
 package ch.bfh.uniboard.exception;
 
+import javax.xml.ws.WebServiceException;
+
 /**
  *
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
-public class MissingQueryParametersException extends Exception{
+public class ServiceConnectionException extends WebServiceException{
 
 }

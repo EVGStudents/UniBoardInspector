@@ -14,6 +14,7 @@ package ch.bfh.uniboard.presentation;
 import ch.bfh.uniboard.client.UniBoardClient;
 import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostData;
+import ch.bfh.uniboard.exception.ServiceConnectionException;
 import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
 import java.io.IOException;
@@ -64,7 +65,12 @@ public class BasicSearchBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        postDataList = UniBoardClient.getTop50MostRecentPosts();
+        try{
+         postDataList = UniBoardClient.getTop50MostRecentPosts();
+        }catch(ServiceConnectionException exception){
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoardService_Exception");
+        }
     }
 
     public String getSection() {
@@ -166,35 +172,51 @@ public class BasicSearchBean implements Serializable{
 
     public String homeBasicSearch() {
         logger.log(Level.INFO, "Redirecting to homepage!");
-
-        postDataList = UniBoardClient.getTop50MostRecentPosts();
+        try {
+            postDataList = UniBoardClient.getTop50MostRecentPosts();
+        } catch (ServiceConnectionException exception) {
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoardService_Exception");
+            return "top50results";
+        }
         return "top50results";
     }
 
     public void home() {
         logger.log(Level.INFO, "Reloading homepage!");
-
-        postDataList = UniBoardClient.getTop50MostRecentPosts();
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
+            postDataList = UniBoardClient.getTop50MostRecentPosts();
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-        } catch (IOException exception) {
+        } catch (ServiceConnectionException exception) {
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoardService_Exception");
+        }
+        catch (IOException exception) {
             logger.log(Level.SEVERE, exception.getMessage());
             MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");
         }
     }
     public String inspect() {
+
         logger.log(Level.INFO, "Executing inpect() method from homepage");
+
         if(section!=null && !section.isEmpty()){
+            try{
             searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-            if (searchResults != null && !searchResults.isEmpty()) {
-                PostData data = searchResults.get(0);
-                messageKeys = data.getMessageKeys();
-                if (group.isEmpty()) {
-                    hasGroup = false;
-                } else {
-                    hasGroup = true;
+                if (searchResults != null && !searchResults.isEmpty()) {
+                    PostData data = searchResults.get(0);
+                    messageKeys = data.getMessageKeys();
+                    if (group.isEmpty()) {
+                        hasGroup = false;
+                    } else {
+                        hasGroup = true;
+                    }
                 }
+            } catch (ServiceConnectionException exception) {
+                logger.log(Level.SEVERE, exception.getMessage());
+                MessageFactory.error("ch.bfh.UniBoardService_Exception");
+                return "basicSearchResults";
             }
         }
       return "basicSearchResults";
@@ -203,22 +225,24 @@ public class BasicSearchBean implements Serializable{
     public void inspectBasicSearch() {
         logger.log(Level.INFO, "Executing inpect() method from Basic Search results page!");
 
-        searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
-
-        if (searchResults != null && !searchResults.isEmpty()) {
-            PostData data = searchResults.get(0);
-            messageKeys = data.getMessageKeys();
-        } else {
-            messageKeys = new ArrayList<>();
-        }
-        if (group.isEmpty()) {
-            hasGroup = false;
-        } else {
-            hasGroup = true;
-        }
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         try {
+            searchResults = SearchService.getBasicSearchResults(section, group, dateFrom, dateTo, limit);
+            if (searchResults != null && !searchResults.isEmpty()) {
+                PostData data = searchResults.get(0);
+                messageKeys = data.getMessageKeys();
+            } else {
+                messageKeys = new ArrayList<>();
+            }
+            if (group.isEmpty()) {
+                hasGroup = false;
+            } else {
+                hasGroup = true;
+            }
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (ServiceConnectionException exception) {
+            logger.log(Level.SEVERE, exception.getMessage());
+            MessageFactory.error("ch.bfh.UniBoardService_Exception");
         } catch (IOException exception) {
             logger.log(Level.SEVERE, exception.getMessage());
             MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");

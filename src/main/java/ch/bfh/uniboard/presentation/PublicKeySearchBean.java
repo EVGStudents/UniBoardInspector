@@ -14,6 +14,8 @@ package ch.bfh.uniboard.presentation;
 
 import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostData;
+import ch.bfh.uniboard.exception.ServiceConnectionException;
+import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -86,10 +88,16 @@ public class PublicKeySearchBean implements Serializable{
     }
 
     public String inspect(){
-            logger.log(Level.INFO,"Executing inpect() method from Search by Public Key page");
-            if(publicKey!=null && !publicKey.isEmpty()){
-            searchResults=SearchService.getPublickeySearchResults(publicKey, dateFrom, dateTo, limit);
+           logger.log(Level.INFO, "Executing inpect() method from Search by Public Key page");
+        if (publicKey != null && !publicKey.isEmpty()) {
+            try {
+                searchResults = SearchService.getPublickeySearchResults(publicKey, dateFrom, dateTo, limit);
+            } catch (ServiceConnectionException exception) {
+                logger.log(Level.SEVERE, exception.getMessage());
+                MessageFactory.error("ch.bfh.UniBoardService_Exception");
+                return "publicKeySearchResults";
             }
-            return "publicKeySearchResults";
+        }
+        return "publicKeySearchResults";
     }
 }

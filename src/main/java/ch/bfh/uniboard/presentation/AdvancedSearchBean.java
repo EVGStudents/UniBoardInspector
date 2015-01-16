@@ -13,6 +13,8 @@ package ch.bfh.uniboard.presentation;
 
 import ch.bfh.uniboard.data.DefaultValues;
 import ch.bfh.uniboard.data.PostData;
+import ch.bfh.uniboard.exception.ServiceConnectionException;
+import ch.bfh.uniboard.service.MessageFactory;
 import ch.bfh.uniboard.service.SearchService;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -143,30 +145,19 @@ public class AdvancedSearchBean implements Serializable{
     }
 
     public String inspect() {
-            logger.log(Level.INFO, "Executing inpect() method from Advanced Search page");
+        logger.log(Level.INFO, "Executing inpect() method from Advanced Search page");
 
-            List<String> groupList = Arrays.asList(groups);
-            List<String> sectionList = Arrays.asList(sections);
-            if (sectionList != null && !sectionList.isEmpty()) {
-            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit, rankScope, rank1, rank2, publicKey);
+        List<String> groupList = Arrays.asList(groups);
+        List<String> sectionList = Arrays.asList(sections);
+        if (sectionList != null && !sectionList.isEmpty()) {
+            try {
+                searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit, rankScope, rank1, rank2, publicKey);
+            } catch (ServiceConnectionException exception) {
+                logger.log(Level.SEVERE, exception.getMessage());
+                MessageFactory.error("ch.bfh.UniBoardService_Exception");
+                return "advancedSearchResults";
+            }
         }
-            return "advancedSearchResults";
+        return "advancedSearchResults";
     }
-
-//    public void inspectAdvancedSearch() {
-//
-//            List<String> groupList = Arrays.asList(groups);
-//            List<String> sectionList = Arrays.asList(sections);
-//            searchResults = SearchService.getAdvancedSearchResults(sectionList, groupList, dateFrom, dateTo, limit,rankScope, rank1, rank2,publicKey);
-//            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-//           try {
-//            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-//        } catch (IOException exception) {
-//            logger.log(Level.SEVERE, exception.getMessage());
-//            MessageFactory.error("ch.bfh.UniBoard.PAGE_RELOAD_ERROR");
-//        }
-//    }
-     public String home(){
-        return "dashboard";
-        }
 }

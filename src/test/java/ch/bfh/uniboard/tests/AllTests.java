@@ -21,7 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author Priya Bianchetti &lt;bianp2@bfh.ch&gt;
  */
 @RunWith(Suite.class)
-@SuiteClasses({ConstraintHandlerTest.class, QueryBuilderTest.class,
+@SuiteClasses({ConstraintHandlerTest.class, QueryBuilderTest.class, SearchServiceTest.class,
              UniBoardClientTest.class })
 public class AllTests {
   }

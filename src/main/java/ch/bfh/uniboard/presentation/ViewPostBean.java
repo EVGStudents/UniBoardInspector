@@ -11,9 +11,11 @@
  */
 package ch.bfh.uniboard.presentation;
 
-import ch.bfh.uniboard.data.Keys;
 import ch.bfh.uniboard.data.PostData;
+import java.io.Serializable;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
@@ -24,7 +26,8 @@ import org.primefaces.context.RequestContext;
  */
 @Named
 @ApplicationScoped
-public class ViewPostBean {
+public class ViewPostBean implements Serializable{
+    private static final Logger logger = Logger.getLogger(ViewPostBean.class.getName());
 
     private String section;
 
@@ -107,6 +110,8 @@ public class ViewPostBean {
     }
 
     public void postDetails(PostData post) {
+        logger.log(Level.INFO, "Showing details of a post");
+        if(post!=null){
         section = post.getSection();
         group = post.getGroup();
         rank = post.getRank();
@@ -115,21 +120,23 @@ public class ViewPostBean {
         signature = post.getSignature();
         publicKey = post.getPublicKey();
         boardSignature = post.getBoardSignature();
-
+        }
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('viewPost').show();");
-
     }
+    
     private String getMessageContents(PostData post){
-        String messageContents="";
-        Map<String, Object> map = post.getMessagePayload();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
-            if(!key.equals(Keys.MESSAGE_ID)){
-            Object value = entry.getValue();
-            messageContents = messageContents+key+": "+value+" <br />";
+        logger.log(Level.INFO, "Formatting message contents");
+        String messageContents = "";
+        if (post != null) {
+            Map<String, Object> map = post.getMessagePayload();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                messageContents = messageContents + key + ": " + value + " <br />";
             }
+            return messageContents;
         }
-        return messageContents;
+        return null;
     }
 }

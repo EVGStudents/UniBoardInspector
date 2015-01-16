@@ -13,6 +13,8 @@
 package ch.bfh.uniboard.presentation;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -25,5 +27,22 @@ import javax.inject.Named;
 public class ValidatorBean implements Serializable{
 
     private String noSectionError;
+
+    public String getNoSectionError() {
+        return noSectionError;
+    }
+
+    public void setNoSectionError(String noSectionError) {
+        this.noSectionError = noSectionError;
+    }
+
+    public boolean sectionSelected(){
+        return false;
+    }
+    public static boolean validateTime(String time) {
+        Pattern pattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
+        Matcher matcher = pattern.matcher(time);
+        return matcher.matches();
+    }
 
 }

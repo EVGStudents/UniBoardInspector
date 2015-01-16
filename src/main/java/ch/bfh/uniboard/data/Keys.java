@@ -33,6 +33,4 @@ public class Keys {
 
     public static String BOARD_SIGNATURE = "boardsignature";
 
-    public static String MESSAGE_ID = "message_id";
-
 }
